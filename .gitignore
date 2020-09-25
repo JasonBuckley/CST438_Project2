@@ -1,0 +1,11 @@
+node_modules
+*.sh
+*.bat
+
+## Excluding visual studio related files/folders
+obj
+.vs
+bin
+tsconfig.json
+*.NJSPROJ
+*.map

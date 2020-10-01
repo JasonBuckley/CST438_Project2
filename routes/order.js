@@ -4,10 +4,11 @@ const mysql = require('mysql');
 
 // gets the config settings for the db
 const sqlConfig = {
-    user: 'dj8w7oh4eost4s0b',
-    password: 'nnnn0lagb3zsk91h',
-    host: 'ao9moanwus0rjiex.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
-    database: 'kysos8b75tltyw1x'
+    user: process.env.SQL_USERNAME,
+    password: process.env.SQL_PASSWORD,
+    host: process.env.SQL_HOST,
+    port: process.env.SQL_PORT,
+    database: process.env.SQL_DATABASE
 };
 
 // creates a pool to handle query requests.
@@ -24,7 +25,6 @@ router.get('/', function(req, res, next) {
 /**
  * Add to product order
  */
-
 // TODO: figure out how to get information from product page
 router.post('/add', function(req, res, next) {
     let userId = req.body.user_id;

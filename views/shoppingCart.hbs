@@ -1,0 +1,91 @@
+<div class="container pt-5">
+
+    <div id="cartItemContainer">
+
+    </div>
+
+
+    <script>
+        addCartItem(
+            {
+                name: "Oranges",
+                info: "Sack of oranges",
+                amount: "5",
+                cost: 4.25,
+                cartId: 1
+            }
+        );
+
+        addCartItem(
+            {
+                name: "Apples",
+                info: "Sack of Apples",
+                amount: "12",
+                cost: 3,
+                cartId: 2
+            }
+        );
+
+        addCartItem(
+            {
+                name: "Grapes",
+                info: "Bag of grapes",
+                amount: "42",
+                cost: 2.75,
+                cartId: 3
+            }
+        );
+     
+
+        function addCartItem(element) {
+            let picture = element.pictureUrl ? element.pictureUrl : "/images/Empty.png";
+
+            $("#cartItemContainer").append(
+                `
+                <div id="cartItem${element.cartId}" class="pb-2">
+                    <div class=" d-flex row">
+                        <div class="col-2 border justify-content-center">
+                            <img class="img-fluid" src="${picture}" alt="/images/Empty.png" />
+                        </div>
+                        <div class="col-3 border">
+                            <div class="d-flex flex-column h-100">
+                                <div class="row border justify-content-center">
+                                    <h>${element.name}</h>
+                                </div>
+                                <div class="row border justify-content-center flex-grow-1">
+                                    <p>${element.info}</p>
+                                </div>
+                                <div class="row border">
+                                    <div class="col">
+                                        <div class="row border h-100 d-flex justify-content-center align-items-center">
+                                            <input id="amount${element.cartId}" class="col-5 amount" value="${element.amount}" style="min-width:60px" type="text" maxlength="3" />
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row border h-100 d-flex justify-content-center align-items-center">
+                                            <p id="totalCost${element.cartId}" class="mt-1">${element.cost * parseFloat(element.amount)}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-1 border justify-content-center">
+                            <button id="deleteCart${element.cartId}">X</button>
+                        </div>
+                    </div>
+                </div>
+                `
+            );
+
+            $(`#amount${element.cartId}`).on('keyup', function () {
+                $(`#totalCost${element.cartId}`).text((4.25 * (this.value ? parseFloat(this.value) : 0) + ""));
+            });
+
+            $(`#deleteCart${element.cartId}`).on('click', function () {
+                console.log("pushed: " + element.cartId);
+                $(`#cartItem${element.cartId}`).remove();
+                console.log($("#cartItemContainer"))
+            })
+        }
+    </script>
+</div>

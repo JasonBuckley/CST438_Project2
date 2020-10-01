@@ -138,4 +138,12 @@ async function isUsernameUsed(username) {
     return user.length == 1;
 }
 
+router.get("/shoppingcart", function (req, res, next) {
+    if (req.session.user) {
+        return res.render("shoppingCart", { title: "Webstore - Home" });
+    }
+
+    return res.redirect("/");
+});
+
 module.exports = router;

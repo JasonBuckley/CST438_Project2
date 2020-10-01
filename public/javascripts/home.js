@@ -7,6 +7,10 @@ $(document).ready(function () {
   $("#back-to-top-btn").on("click", function () {
     backToTop();
   });
+
+  $("#logo").on("click", function () {
+    window.location.href = "/";
+  });
 });
 
 // functions for opening and closing the side menu for product categories

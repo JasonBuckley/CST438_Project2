@@ -42,6 +42,12 @@
   cursor: pointer;
 }
 
+.input-group-text:hover {
+  background: #0b7dda !important;
+  border: 1px solid #0b7dda !important;
+  cursor: pointer;
+}
+
 .search-box {
   display: inline-flex;
   width: 60%;
@@ -199,6 +205,10 @@
 
 .carousel {
   box-shadow: 1px 1px 4px 1px rgba(0, 0, 0, 0, 5);
+}
+
+.carousel-inner img {
+  height: 100vh;
 }
 
 .carousel-indicators {

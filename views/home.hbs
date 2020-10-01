@@ -10,10 +10,9 @@
         <div class="search-box">
             <i class="fa fa-bars" id="menu-btn" onclick="openMenu()"></i>
             <i class="fa fa-times" id="close-btn" onclick="closeMenu()"></i>
-            {{!-- <img src="./images/logo.png" class="logo"> --}}
             <h1 class="logo" id="logo">LOGO</h1>
             <input type="text" class="form-control" id="search-product">
-            <span class="input-group-text"><i class="fa fa-search"></i></span>
+            <span class="input-group-text" id="search-btn"><i class="fa fa-search"></i></span>
         </div>
         <div class="menu-bar">
             <ul>
@@ -39,12 +38,13 @@
                     <form action="/users">
                         <div id="username-input">
                             <span class="fa fa-user-o" id="username-icon"></span>
-                            <input type="text" id="username" name="username" placeholder="Username" autocomplete="off">
+                            <input type="text" id="username" name="username" placeholder="Username" autocomplete="off"
+                                required>
                         </div>
                         <div id="password-input">
                             <span class="fa fa-key" id="password-icon"></span>
                             <input type="password" id="password" name="password" placeholder="Password"
-                                autocomplete="off">
+                                autocomplete="off" required>
                         </div>
 
                         <button type="submit" id="login-button">Login</button>

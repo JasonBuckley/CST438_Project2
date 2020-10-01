@@ -4,6 +4,10 @@
 $(document).ready(function () {
   $("#search-product").focus();
 
+  // $("#search-btn").on("click", function () {
+  //   // do something
+  // });
+
   $("#back-to-top-btn").on("click", function () {
     backToTop();
   });

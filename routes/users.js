@@ -1,4 +1,4 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 const mysql = require('mysql');
 const session = require('express-session');
@@ -46,6 +46,7 @@ router.get('/', function (req, res, next) {
  * @param string password
  * @return json object with user info
  */
+
 router.get('/', async function (req, res, next) {
     console.log("entering login middle ware");
     const query = 'SELECT * FROM user WHERE username = ' + pool.escape(req.query.username) +
@@ -91,7 +92,6 @@ router.get("/logout", function (req, res) {
  * @return int representing id where it was entered
  */
 router.post("/add", async function (req, res) {
-
     if (await isUsernameUsed(req.body.username)) {
         return res.json(-1);
     }

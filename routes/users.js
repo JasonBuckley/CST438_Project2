@@ -49,7 +49,7 @@ router.get('/', function (req, res, next) {
 
 router.get('/', async function (req, res, next) {
     console.log("entering login middle ware");
-    const query = 'SELECT * FROM user WHERE username = ' + pool.escape(req.query.username) +
+    const query = 'SELECT * FROM User WHERE username = ' + pool.escape(req.query.username) +
         'AND password = ' + pool.escape(req.query.password);
 
     var user = await new Promise(function (resolve, reject) {

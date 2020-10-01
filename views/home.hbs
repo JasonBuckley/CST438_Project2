@@ -11,7 +11,7 @@
             <i class="fa fa-bars" id="menu-btn" onclick="openMenu()"></i>
             <i class="fa fa-times" id="close-btn" onclick="closeMenu()"></i>
             {{!-- <img src="./images/logo.png" class="logo"> --}}
-            <h1 class="logo">LOGO</h1>
+            <h1 class="logo" id="logo">LOGO</h1>
             <input type="text" class="form-control" id="search-product">
             <span class="input-group-text"><i class="fa fa-search"></i></span>
         </div>
@@ -19,8 +19,41 @@
             <ul>
                 <li><a href="#"><i class="fa fa-shopping-basket"></i>cart</a></li>
                 {{!-- <li><a href="#">Sign Up</a></li> --}}
-                <li><a href="#">login </a><i class="fa fa-user-circle fa-lg"></i></li>
+                <li data-toggle="modal" data-target="#loginForm"><a href="#">login </a><i
+                        class="fa fa-user-circle fa-lg"></i></li>
             </ul>
+        </div>
+    </div>
+
+    <div class="modal fade" id="loginForm" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title-container">
+                        <h5 class="modal-title">Login</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="tc-modal-body" class="modal-body">
+                    <div id="username-input">
+                        <span class="fa fa-user-o" id="username-icon"></span>
+                        <input type="text" id="username" name="username" placeholder="Username" autocomplete="off">
+                    </div>
+                    <div id="password-input">
+                        <span class="fa fa-key" id="password-icon"></span>
+                        <input type="password" id="password" name="password" placeholder="Password" autocomplete="off">
+                    </div>
+
+                    <button type="submit" id="login-button">Login</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-toggle="modal" data-target="#loginForm" class="cancelbtn">Cancel</button>
+                    <span class="new-here" data-toggle="modal" data-target="#createAccountForm">New here? <a
+                            href="#">Create Account</a> </span>
+                </div>
+            </div>
         </div>
     </div>
 

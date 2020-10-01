@@ -16,6 +16,10 @@
   margin: 5px 10px;
 }
 
+.logo:hover {
+  cursor: pointer;
+}
+
 .form-control {
   margin-top: 9px;
   margin-left: 30px;
@@ -330,4 +334,76 @@
 
 #back-to-top-btn:hover {
   background: #0b7dda;
+}
+
+/* ---------- Styling for Login Modal --------- */
+.modal-title-container {
+  width: 100%;
+  display: flex;
+}
+
+.modal-header {
+  flex-direction: column !important;
+}
+
+.modal-footer {
+  justify-content: space-between;
+}
+
+#username,
+#password {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+#login-button {
+  background-color: #2196f3;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+#login-button:hover {
+  background-color: #0b7dda;
+}
+
+.cancelbtn {
+  width: auto;
+  padding: 10px 18px;
+  background-color: #f44336;
+}
+
+.cancelbtn:hover {
+  opacity: 0.8;
+}
+
+span.new-here {
+  float: right;
+  padding-top: 16px;
+}
+
+#username,
+#password {
+  padding-left: 2.375rem;
+}
+
+#username-icon,
+#password-icon {
+  position: absolute;
+  z-index: 2;
+  padding-top: 15px;
+  display: block;
+  width: 2.375rem;
+  height: 2.375rem;
+  line-height: 2.375rem;
+  text-align: center;
+  pointer-events: none;
+  color: #aaa;
 }

@@ -10,17 +10,52 @@
         <div class="search-box">
             <i class="fa fa-bars" id="menu-btn" onclick="openMenu()"></i>
             <i class="fa fa-times" id="close-btn" onclick="closeMenu()"></i>
-            {{!-- <img src="./images/logo.png" class="logo"> --}}
-            <h1 class="logo">LOGO</h1>
+            <h1 class="logo" id="logo">LOGO</h1>
             <input type="text" class="form-control" id="search-product">
-            <span class="input-group-text"><i class="fa fa-search"></i></span>
+            <span class="input-group-text" id="search-btn"><i class="fa fa-search"></i></span>
         </div>
         <div class="menu-bar">
             <ul>
                 <li><a href="#"><i class="fa fa-shopping-basket"></i>cart</a></li>
-                {{!-- <li><a href="#">Sign Up</a></li> --}}
-                <li><a href="#">login </a><i class="fa fa-user-circle fa-lg"></i></li>
+                <li data-toggle="modal" data-target="#loginForm"><a href="#">login </a><i
+                        class="fa fa-user-circle fa-lg"></i></li>
             </ul>
+        </div>
+    </div>
+
+    <div class="modal fade" id="loginForm" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title-container">
+                        <h5 class="modal-title">Login</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="tc-modal-body" class="modal-body">
+                    <form action="/users">
+                        <div id="username-input">
+                            <span class="fa fa-user-o" id="username-icon"></span>
+                            <input type="text" id="username" name="username" placeholder="Username" autocomplete="off"
+                                required>
+                        </div>
+                        <div id="password-input">
+                            <span class="fa fa-key" id="password-icon"></span>
+                            <input type="password" id="password" name="password" placeholder="Password"
+                                autocomplete="off" required>
+                        </div>
+
+                        <button type="submit" id="login-button">Login</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-toggle="modal" data-target="#loginForm" class="cancelbtn">Cancel</button>
+                    <span class="new-here" data-toggle="modal" data-target="#createAccountForm">New here? <a
+                            href="#">Create Account</a> </span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -98,28 +133,12 @@
         </div>
     </section>
 
-    <section class="featured-categories">
-        <marquee id="intro" direction="left"><big><i>¡¡¡Check out these lamps!!!</i></big></marquee>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <img src="./images/lamp-1.png" alt="">
-                </div>
-                <div class="col-md-4">
-                    <img src="./images/lamp-2.png" alt="">
-                </div>
-                <div class="col-md-4">
-                    <img src="./images/lamp-3.png" alt="">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="on-sale">
+    <section class="featured">
         <div class="container">
             <div class="title-box">
-                <h2>On Sale</h2>
+                <h2>Featured Products</h2>
             </div>
+            <marquee id="intro" direction="left"><big><i>¡¡¡Check out these lamps!!!</i></big></marquee>
             <div class="row">
                 <div class="col-md-3">
                     <div class="product-top">
@@ -128,10 +147,7 @@
                             <button type="button" class="btn btn-secondary" title="Quick Shop">
                                 <i class="fa fa-eye"></i>
                             </button>
-                            <button type="button" class="btn btn-secondary" title="Add to Wishlist">
-                                <i class="fa fa-heart-o"></i>
-                            </button>
-                            <button type="button" class="btn btn-secondary" title="Quick Shop">
+                            <button type="button" class="btn btn-secondary" title="Add to Cart">
                                 <i class="fa fa-shopping-cart"></i>
                             </button>
                         </div>
@@ -148,10 +164,7 @@
                             <button type="button" class="btn btn-secondary" title="Quick Shop">
                                 <i class="fa fa-eye"></i>
                             </button>
-                            <button type="button" class="btn btn-secondary" title="Add to Wishlist">
-                                <i class="fa fa-heart-o"></i>
-                            </button>
-                            <button type="button" class="btn btn-secondary" title="Quick Shop">
+                            <button type="button" class="btn btn-secondary" title="Add to Cart">
                                 <i class="fa fa-shopping-cart"></i>
                             </button>
                         </div>
@@ -168,10 +181,7 @@
                             <button type="button" class="btn btn-secondary" title="Quick Shop">
                                 <i class="fa fa-eye"></i>
                             </button>
-                            <button type="button" class="btn btn-secondary" title="Add to Wishlist">
-                                <i class="fa fa-heart-o"></i>
-                            </button>
-                            <button type="button" class="btn btn-secondary" title="Quick Shop">
+                            <button type="button" class="btn btn-secondary" title="Add to Cart">
                                 <i class="fa fa-shopping-cart"></i>
                             </button>
                         </div>
@@ -188,10 +198,7 @@
                             <button type="button" class="btn btn-secondary" title="Quick Shop">
                                 <i class="fa fa-eye"></i>
                             </button>
-                            <button type="button" class="btn btn-secondary" title="Add to Wishlist">
-                                <i class="fa fa-heart-o"></i>
-                            </button>
-                            <button type="button" class="btn btn-secondary" title="Quick Shop">
+                            <button type="button" class="btn btn-secondary" title="Quick Cart">
                                 <i class="fa fa-shopping-cart"></i>
                             </button>
                         </div>
@@ -235,6 +242,8 @@
             <a class="link" href="https://github.com/JasonBuckley/CST438_Project2" target="_blank"
                 aria-label="View source on GitHub">View Source on GitHub <i class="fa fa-github"
                     aria-hidden="true"></i></a>
+
+            <p>THIS IS A FICTITIOUS SITE :)</p>
         </div>
     </section>
 

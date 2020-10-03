@@ -32,8 +32,13 @@ router.get('/', function (req, res, next) {
         return;
     }
 
+    // if an user is an admin bring them to the admin screen
+    if (req.session && req.session.user && req.session.user[0].accessLevel === 1) {
+        console.log(req.session.user[0].username + "has logged in as admin");
+        return res.render("adminScreen");
+    }
+
     if (req.session && req.session.user) {
-        // direct them to there account page @TODO account page
         return res.redirect("/account");
     }
 
@@ -97,12 +102,13 @@ router.post("/add", async function (req, res) {
     }
 
     const insertId = await new Promise(function (resolve, reject) {
-        const query = 'INSERT INTO User VALUES (NULL, ?, ?, ?, ?)';
+        const query = 'INSERT INTO User VALUES (NULL, ?, ?, ?, ?, ?)';
         const values = [
             req.body.username,
             req.body.password,
             req.body.address,
-            req.body.email
+            req.body.email,
+            0
         ];
         pool.query(query, values, function (error, results) {
             if (error) {

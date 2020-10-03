@@ -1,7 +1,10 @@
+DROP TABLE IF EXISTS Product_Order;
 DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS Product;
 
 CREATE TABLE User(
 	userId int AUTO_INCREMENT,
+	accessLevel tinyInt,
 	username varchar(32),
 	password varchar(32),
 	address varchar(128),
@@ -10,20 +13,17 @@ CREATE TABLE User(
 	PRIMARY KEY(userId)
 );
 
-DROP TABLE IF EXISTS Product;
-
 CREATE TABLE Product(
 	productId int AUTO_INCREMENT,
 	name varchar(64),
+	brand varchar(64),
 	info varchar(128),
-	pictureUrl varchar(255),
+	imgId varchar(255),
 	stock smallInt,
 	cost numeric(7, 2), 
 
 	PRIMARY KEY (productId)
 );
-
-DROP TABLE IF EXISTS Product_Order;
 
 CREATE TABLE Product_Order(
 	orderId int AUTO_INCREMENT,

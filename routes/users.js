@@ -104,11 +104,11 @@ router.post("/add", async function (req, res) {
     const insertId = await new Promise(function (resolve, reject) {
         const query = 'INSERT INTO User VALUES (NULL, ?, ?, ?, ?, ?)';
         const values = [
+            0,
             req.body.username,
             req.body.password,
             req.body.address,
-            req.body.email,
-            0
+            req.body.email
         ];
         pool.query(query, values, function (error, results) {
             if (error) {

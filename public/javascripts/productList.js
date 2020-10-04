@@ -14,10 +14,12 @@ $(document).ready(function () {
 
     // creates a frame that holds the info for a product.
     function createFrameDiv(element) {
+        console.log("https://drive.google.com/uc?export=download&id=" + element.imgId );
+        img = element.imgId ? "https://drive.google.com/uc?export=download&id=" + element.imgId : "/images/Empty.png";
         $("#productContainer").append(
             `<div class=" d-flex row pb-2">
                 <div class="col-2 border justify-content-center">
-                    <img class="img-fluid" src="/images/Empty.png" alt="${element.pictureUrl} picture"/>
+                    <img class="img-fluid" src="${img}" alt="Picture of ${element.name} picture"/>
                 </div>
                 <div class="col-3 border">
                     <div class="d-flex flex-column h-100">

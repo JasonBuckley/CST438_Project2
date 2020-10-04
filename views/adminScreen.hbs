@@ -1,0 +1,77 @@
+<h1>Upload Image</h1>
+
+<form id="addProductForm" action="/product/add" method="post" enctype="multipart/form-data">
+    <div><label class="pr-2">Name:</label><input id="productName" type="text" name="productName"></div>
+    <div><label class="pr-2">Brand:</label><input id="productBrand" type="text" name="productBrand"></div>
+    <div><label class="pr-2">Information:</label><input id="productInfo" type="text" name="productInfo"></div>
+    <div><label class="pr-2">Stock:</label><input class="numericCheck" id="productStock" type="text" name="productStock"></div>
+    <div><label class="pr-2">Cost:</label><input class="numericCheck" id="productCost" type="text" name="productCost"></div>
+    <input id="productImageFile" type="file" accept="image/*" name="photo">
+    <input type="submit" value="Add Product">
+</form>
+
+<script>
+    $(document).ready(function () {
+        
+        $("#addProductForm").on("submit", function (event) {
+            if (!isFormValid()) {
+                event.preventDefault();
+            }
+        });
+
+        $(".numericCheck").on("keypress", validateNumber);
+
+        /**
+         * checks if the input is a number, if not it prevents the key from being entered.
+         * @param event
+         */
+        function validateNumber(event) {
+            var key = event.which || event.charCode || event.keyCode || 0;
+
+            if (key == 8 || key == 46 || key == 37 || key == 39){
+                return true;
+            } else if (key < 48 || key > 57) {
+                return false;
+            }
+
+            return true;
+        }; 
+
+        function isFormValid() {
+            isValid = true;
+
+            if (!$("#productName").val()) {
+                isValid &= false;
+                console.log("Incorrect Name");
+            }
+
+            if (!$("#productBrand").val()) {
+                isValid &= false;
+                console.log("Incorrect brand");
+            }
+
+            if (!$("#productInfo").val()) {
+                isValid &= false;
+                console.log("Incorrect info");
+            }
+
+            if (!$("#productStock").val() || !($("#productStock").val().indexOf(".") == -1)) {
+                isValid &= false;
+                console.log("Incorrect stock");
+            }
+
+            if (!$("#productCost").val() || parseFloat($("#productCost").val()) <= 0) {
+                isValid &= false;
+                console.log("Incorrect cost");
+            }
+
+            validFileTypes = ["jpg", "png"];
+            if (!$("#productImageFile").val() || !validFileTypes.includes($("#productImageFile").val().split(".").pop())) {
+                isValid &= false;
+                console.log("Incorrect image");
+            }
+
+            return isValid;
+        }
+    });
+</script>

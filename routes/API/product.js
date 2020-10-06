@@ -17,7 +17,7 @@ const sqlConfig = {
     password: process.env.SQL_PASSWORD,
     host: process.env.SQL_HOST,
     port: process.env.SQL_PORT,
-    database: process.env.SQL_DATABASE
+    database: process.env.SQL_DATABASE,
 };
 
 // creates a pool to handle query requests.
@@ -175,5 +175,54 @@ async function uploadToDrive(file, name, mimetype, jWTClient) {
             console.log(error);
         });
 }
+
+/**
+ * Updates a product given product id
+ * @param name, brand, info, imgId, stock, cost
+ * @return int representing id where it was entered
+ */
+router.put("/update/:id", async function (req, res) {
+
+    //find id, if there update info, update db
+    const insertId = await new Promise(function (resolve, reject) {
+        const query = 'UPDATE Product SET name = ?, brand = ?, info = ?, stock = ?, cost = ? WHERE productId = ?';
+        const values = [
+            req.body.productName,
+            req.body.productBrand,
+            req.body.productInfo,
+            req.body.productStock,
+            req.body.productCost,
+            req.body.productId
+            ];
+            pool.query(query, values, function (error, results) {
+                if (error) {
+                    req.err = error;
+                    reject(error);
+                } else {
+                    resolve(results.insertId);
+                }
+            });
+        });
+    return res.json(insertId);
+});
+
+/**
+ * Deletes product given product id
+ */
+router.get("/delete/:id", async function (req, res) {
+    const deletedId = await new Promise(function (resolve, reject) {
+        const query = 'DELETE FROM Product WHERE productId = ?';
+        const values = [req.query.id];
+        pool.query(query, values, function (error, results) {
+            if (error) {
+                req.err = error;
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+    return res.send(deletedId + "has been Deleted");
+});
 
 module.exports = router;

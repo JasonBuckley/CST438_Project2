@@ -15,10 +15,24 @@
             <span class="input-group-text" id="search-btn"><i class="fa fa-search"></i></span>
         </div>
         <div class="menu-bar">
-            <ul>
-                <li><a href="#"><i class="fa fa-shopping-basket"></i>cart</a></li>
-                <li data-toggle="modal" data-target="#loginForm"><a href="#">login </a><i
-                        class="fa fa-user-circle fa-lg"></i></li>
+            <ul class="menu">
+                <li class="option"><a href="#" class="tag"><i class="fa fa-shopping-basket"></i>cart</a></li>
+                {{#if username}}
+                <li class="option dropdown">
+                    <a href="#" class="tag dropdown-toggle" data-toggle="dropdown">{{ username }} <i
+                            class="fa fa-user-circle fa-lg"></i></a>
+
+                    <div>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" class="a">My Account</a></li>
+                            <li><a href="#" class="a" id="logout-opt">Logout</a></li>
+                        </ul>
+                    </div>
+                </li>
+                {{else}}
+                <li data-toggle="modal" data-target="#loginForm" class="option"><a href="#" class="tag">login <i
+                            class="fa fa-user-circle fa-lg"></i></a></li>
+                {{/if}}
             </ul>
         </div>
     </div>

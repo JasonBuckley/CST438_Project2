@@ -15,6 +15,8 @@ $(document).ready(function () {
   $("#logo").on("click", function () {
     window.location.href = "/";
   });
+
+  $("#logout-opt").on("click", logout);
 });
 
 // functions for opening and closing the side menu for product categories
@@ -50,4 +52,19 @@ function scrollFunction() {
 function backToTop() {
   document.body.scrollTop = 0;
   document.documentElement.scrollTop = 0;
+}
+
+function logout() {
+  $.ajax({
+    type: "GET",
+    url: "/users/logout",
+    dataType: "json",
+    success: function (status) {
+      window.location.href = "/";
+    },
+    error: function (xhr, status, error) {
+      err = eval("error: (" + xhr.responseText + ")");
+      console.error(err);
+    },
+  });
 }

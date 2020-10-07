@@ -25,7 +25,6 @@ router.use(session({
  * Defualt users path.  If given an incomplete query or none it redirects to the home page.
  */
 router.get('/', function (req, res, next) {
-    console.log(req.session.user)
     // send them to login middleware
     if (req.query && req.query.username && req.query.password) {
         next();
@@ -72,11 +71,14 @@ router.get('/', async function (req, res, next) {
     try {
         if (user && user.length > 0) {
             req.session.user = user;
+            req.session.username = req.query.username;
         } else {
             delete req.session.user;
+            delete req.session.username;
         }
     } catch (err) {
         delete req.session.user;
+        delete req.session.username;
     }
 
     return res.redirect("/");

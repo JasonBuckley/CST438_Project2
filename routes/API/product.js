@@ -182,7 +182,6 @@ async function uploadToDrive(file, name, mimetype, jWTClient) {
  * @return int representing id where it was entered
  */
 router.put("/update/:id", async function (req, res) {
-
     //find id, if there update info, update db
     const insertId = await new Promise(function (resolve, reject) {
         const query = 'UPDATE Product SET name = ?, brand = ?, info = ?, stock = ?, cost = ? WHERE productId = ?';

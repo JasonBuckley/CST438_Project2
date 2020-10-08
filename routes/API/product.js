@@ -17,7 +17,7 @@ const sqlConfig = {
     password: process.env.SQL_PASSWORD,
     host: process.env.SQL_HOST,
     port: process.env.SQL_PORT,
-    database: process.env.SQL_DATABASE,
+    database: process.env.SQL_DATABASE
 };
 
 // creates a pool to handle query requests.

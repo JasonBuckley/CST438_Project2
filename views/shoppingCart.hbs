@@ -1,0 +1,150 @@
+<div class="container pt-5">
+    <section class="pt-5 pb-5">
+        <div class="container">
+            <div class="col-lg-12 col-md-12 col-12">
+                <h3 class="display-5 mb-2 text-center font-weight-bold">Shopping Cart</h3>
+                <p class="mb-5 text-center"> <span id="cartCount" class="text-info font-weight-bold">3</span> items in your cart </p>
+            </div>
+
+            <div class="row w-100">
+                <table id="shoppingCart" class="table table-condensed table-responsive">
+                    <thead>
+                        <tr>
+                            <th style="width:60%">Product</th>
+                            <th style="width:12%">Price</th>
+                            <th style="width:15%">Quantity</th>
+                            <th style="width:16%"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="cartItemHolder"></tbody>
+                </table>
+
+            </div>
+
+            <div class="row w-100 d-flex justify-content-end">
+                <div class="text-right">
+                    <h4>Subtotal:</h4>
+                    <h1>$<span id="cartSubtotal">0</span></h1>
+                </div>
+            </div>
+
+            <div>
+                <div class="row mt-4 d-flex align-items-center">
+                    <div class="col-sm-6 order-md-2 text-right">
+                        <a href="" class="btn btn-primary mb-4 btn-lg pl-5 pr-5">Checkout</a>
+                    </div>
+                    <div class="col-sm-6 mb-3 mb-m-1 order-md-1 text-md-left">
+                        <a href="/">Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="cartItemContainer"></div>
+
+    <script>
+        let subtotal = 0;
+        let cartCount = 0;
+
+        addCartItem(
+            {
+                name: "Oranges",
+                info: "Sack of oranges",
+                amount: "5",
+                cost: "4.25",
+                cartId: 1,
+                brand: "Grape Co."
+            }
+        );
+
+        addCartItem(
+            {
+                name: "Apples",
+                info: "Sack of Apples",
+                amount: "12",
+                cost: "3",
+                cartId: 2,
+                brand: "Grape Co."
+            }
+        );
+
+        addCartItem(
+            {
+                name: "Grapes",
+                info: "Bag of grapes",
+                amount: "42",
+                cost: "2.75",
+                cartId: 3,
+                brand: "Grape Co."
+            }
+        );
+
+        function addCartItem(element) {
+            img = element.imgId ? "https://drive.google.com/uc?export=download&id=" + element.imgId : "/images/Empty.png";
+            $("#cartItemHolder").append(
+                `
+                <tr id="cartItem${element.cartId}">
+                    <td>
+                        <div class="row">
+                            <div class="col-md-3 text-left">
+                                <img src="${img}" alt="Picture of ${element.name}" class="img-fluid rounded mb-2 shadow ">
+                                    </div>
+                                <div class="col-md-9 text-left mt-sm-2">
+                                    <h4><strong>${element.name}</strong></h4>
+                                    <p class="font-weight-light">${element.brand}</p>
+                                </div>
+                            </div>
+                            </td>
+                        <td> $<span id="totalCost${element.cartId}">${element.cost * parseFloat(element.amount)}</span></td>
+                        <td>
+                            <input id="amount${element.cartId}" type="text" class="form-control form-control-lg text-center amount" value="${element.amount}", maxlength=4>
+                        </td>
+                        <td class="actions" data-th="">
+                            <div class="text-right">
+                                <button id="deleteCart${element.cartId}" class="btn btn-white border-secondary bg-white btn-md mb-2">X</button>
+                            </div>
+                        </td>
+                </tr>
+                `
+            );
+
+            cartCount++;
+            $("#cartCount").text(cartCount);
+
+            subtotal += parseFloat(element.cost) * parseFloat(element.amount);
+            $("#cartSubtotal").text(subtotal);
+
+            $(`#amount${element.cartId}`).on('keyup', function () {
+                subtotal -= $(`#totalCost${element.cartId}`).text() ? parseFloat($(`#totalCost${element.cartId}`).text()) : 0;
+                $(`#totalCost${element.cartId}`).text((element.cost * (this.value ? parseFloat(this.value) : 0) + ""));
+                subtotal += $(`#totalCost${element.cartId}`).text() ? parseFloat($(`#totalCost${element.cartId}`).text()) : 0;
+                $("#cartSubtotal").text(subtotal);
+            });
+
+            $(`#deleteCart${element.cartId}`).on('click', function () {
+                subtotal -= $(`#totalCost${element.cartId}`).text() ? parseFloat($(`#totalCost${element.cartId}`).text()) : 0;
+                $(`#cartItem${element.cartId}`).remove();
+                $("#cartSubtotal").text(subtotal);
+            });
+
+            $(`#amount${element.cartId}`).on('keypress', validateNumber);
+        }
+
+        /**
+         * checks if the input is a number, if not it prevents the key from being entered.
+         * @param event
+         */
+        function validateNumber(event) {
+            var key = event.which || event.charCode || event.keyCode || 0;
+
+            // allows input from left arrow, right arrow, and delete keys.
+            if (key == 8 || key == 37 || key == 39) {
+                return true;
+            } else if (key < 48 || key > 57) { // does not allow anything that is not a number
+                return false;
+            }
+            return true;
+        }; 
+    </script>
+</div>

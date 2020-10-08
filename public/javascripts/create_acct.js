@@ -18,7 +18,7 @@ function signUp() {
 
     // creates a frame that holds the info for a product.
 	function createFrameDiv(element) {
-
+		<div>
 		Username: <input id="username" type="text">
 			<span id="correctUser"></span>
 			<br>
@@ -27,7 +27,7 @@ function signUp() {
 			<br>
 		Email: <input type="text"><br>
 			<br><br>
-
+		</div>
 
 	document.querySelector('#password').addEventListener('click', async function() {
 				let passwordSize = 8;

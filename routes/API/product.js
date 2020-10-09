@@ -24,8 +24,8 @@ const sqlConfig = {
 const pool = mysql.createPool(sqlConfig);
 
 /**
- * Gets all the products if there is no id in query
- * @Returns json object containing all products
+ * Gets all the products for a page if there is no id in query.  Each page consists at most of 5 items.
+ * @Returns json object containing all products for page.
 */
 router.get('/', async function (req, res, next) {
     if (req.query && req.query.id) {
@@ -33,8 +33,13 @@ router.get('/', async function (req, res, next) {
         return;
     }
 
+    if (req.query.page < 0) {
+        return res.json({ success: false }).status(400);
+    }
+
     var products = await new Promise(function (resolve, reject) {
-        const query = `SELECT * FROM Product;`
+        page = req.query.page ? req.query.page : 0;
+        const query = `SELECT * FROM Product Limit 5 OFFSET ${page * 5};`
         pool.query(query, function (error, results) {
             if (error) {
                 req.err = error;
@@ -43,9 +48,11 @@ router.get('/', async function (req, res, next) {
                 resolve(results);
             }
         });
+    }).catch((err) => {
+        console.log(err);
     });
 
-    res.json(products);
+    res.json({ success: (Array.isArray(products) && products.length > 0), products: products });
 });
 
 /**
@@ -68,14 +75,15 @@ router.get('/', async function (req, res, next) {
         });
     });
 
-    res.render('productPage', { product: product && product.length ? JSON.stringify(product["0"]) : JSON.stringify({})});
+    product = Array.isArray(product) && product.length ? JSON.stringify(product[0]) : "'NONE'";
+    res.render('productPage', { product: product });
 });
 
 /**
  * Adds a product to the database.
  */
 router.post('/add', multer.single('photo'), async function (req, res) {
-    if (req.file) {
+    if (req.file && req.session.user && req.session.user.accessLevel === 1) {
         console.log(req.file);
         
         const insertId = await googleAuth()
@@ -222,6 +230,10 @@ router.get("/delete/:id", async function (req, res) {
         });
     });
     return res.send(deletedId + "has been Deleted");
+});
+
+router.get("/test", function (req, res) {
+    res.render("test");
 });
 
 module.exports = router;

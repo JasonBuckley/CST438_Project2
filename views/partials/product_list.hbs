@@ -1,6 +1,31 @@
 <div class="container-fluid flex-row-reverse">
-    <div id="productContainer" class="d-flex flex-column flex-row"></div>
-    <script src="javascripts/productList.js"></script>
+
+    <div class="row w-100">
+        <table style="max-height:90%" id="shoppingCart" class="table table-condensed table-responsive">
+            <thead>
+                <tr>
+                    <th style="width:40%">Product</th>
+                    <th style="width:30%">Info</th>
+                    <th style="width:15%">Available</th>
+                    <th style="width:15%">Price</th>
+                </tr>
+            </thead>
+            <tbody id="productContainer">    
+            </tbody>
+        </table>
+    </div>
+    <div class="d-flex justify-content-end pl-5">
+        <p class="text-center">
+            <button id="prevPage">
+                <
+            </button>
+            <button id="nextPage">
+                >
+            </button>
+        </p>
+    </div>
+
+    <script src="../javascripts/productList.js"></script>
 </div>
 
 

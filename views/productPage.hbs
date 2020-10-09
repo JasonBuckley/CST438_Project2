@@ -1,8 +1,9 @@
 <div>
+    {{{product}}}
     <script>
         // gets the product sent in through res.render()
-        var product = {{{ product }}};
+    var product = {{{ product }}};
 
-        console.log(product && product.id ? product : "NONE");
+        console.log(product);
     </script>
 </div>

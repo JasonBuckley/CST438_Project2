@@ -12,8 +12,8 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/API/users");
 var productRouter = require("./routes/API/product");
 var homeRouter = require("./routes/home");
+var productInfoRouter = require("./routes/product_info");
 var orderRouter = require("./routes/API/order");
-
 var app = express();
 
 // create connection to database
@@ -42,6 +42,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", homeRouter);
 app.use("/users", usersRouter);
 app.use("/product", productRouter);
+app.use("/product-info", productInfoRouter);
 app.use("/order", orderRouter);
 
 // catch 404 and forward to error handler

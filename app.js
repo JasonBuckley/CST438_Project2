@@ -1,3 +1,4 @@
+const mysql = require('mysql');
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
@@ -11,8 +12,22 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var productRouter = require("./routes/API/product");
 var homeRouter = require("./routes/home");
+var orderRouter = require("./routes/API/order");
 
 var app = express();
+
+// create connection to database
+// the mysql.createConnection function takes in a configuration object which contains host, user, password and the database name.
+const sqlConfig = mysql.createConnection ({
+  user: process.env.SQL_USERNAME,
+  password: process.env.SQL_PASSWORD,
+  host: process.env.SQL_HOST,
+  port: process.env.SQL_PORT,
+  database: process.env.SQL_DATABASE,
+});
+
+// creates a pool to handle query requests.
+const pool = mysql.createPool(sqlConfig);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -27,6 +42,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", homeRouter);
 app.use("/users", usersRouter);
 app.use("/product", productRouter);
+app.use("/order", orderRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

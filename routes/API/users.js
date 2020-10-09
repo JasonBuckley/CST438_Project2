@@ -31,9 +31,11 @@ router.get('/', function (req, res, next) {
         return;
     }
 
+    console.log(req.session.user);
+
     // if an user is an admin bring them to the admin screen
-    if (req.session && req.session.user && req.session.user[0].accessLevel === 1) {
-        console.log(req.session.user[0].username + "has logged in as admin");
+    if (req.session && req.session.user && req.session.user.accessLevel === 1) {
+        console.log(req.session.user.username + "has logged in as admin");
         return res.render("adminScreen");
     }
 
@@ -68,15 +70,10 @@ router.get('/', async function (req, res, next) {
         });
     });
 
-    try {
-        if (user && user.length > 0) {
-            req.session.user = user;
-            req.session.username = req.query.username;
-        } else {
-            delete req.session.user;
-            delete req.session.username;
-        }
-    } catch (err) {
+    if (Array.isArray(user) && user.length) {
+        req.session.user = user[0];
+        req.session.username = req.query.username;
+    } else {
         delete req.session.user;
         delete req.session.username;
     }
@@ -99,30 +96,35 @@ router.get("/logout", function (req, res) {
  * @return int representing id where it was entered
  */
 router.post("/add", async function (req, res) {
-    if (await isUsernameUsed(req.body.username)) {
-        return res.json(-1);
+    if (!req.body.username || !req.body.password || !req.body.address || !req.body.email) {
+        return res.json({ insertId: -1, success: false }).status(400);
     }
 
-    const insertId = await new Promise(function (resolve, reject) {
-        const query = 'INSERT INTO User VALUES (NULL, ?, ?, ?, ?, ?)';
-        const values = [
-            0,
-            req.body.username,
-            req.body.password,
-            req.body.address,
-            req.body.email
-        ];
-        pool.query(query, values, function (error, results) {
-            if (error) {
-                req.err = error;
-                reject(error);
+    const insertId = await isUsernameUsed(req.body.username)
+        .then((isTaken) => new Promise(function (resolve, reject) {
+            if (isTaken) {
+                resolve(-1); // indicates a failed insertion.
             } else {
-                resolve(results.insertId);
+                const query = 'INSERT INTO User VALUES (NULL, ?, ?, ?, ?, ?)';
+                const values = [
+                    0,
+                    req.body.username,
+                    req.body.password,
+                    req.body.address,
+                    req.body.email
+                ];
+                pool.query(query, values, function (error, results) {
+                    if (error) {
+                        req.err = error;
+                        reject(error);
+                    } else {
+                        resolve(results.insertId);
+                    }
+                });
             }
-        });
-    });
+        }));
 
-    return res.json(insertId);
+    return res.json({ insertId: insertId, success: insertId > -1 }).status(insertId > -1 ? 200 : 409);
 });
 
 /**
@@ -131,24 +133,25 @@ router.post("/add", async function (req, res) {
  * @return boolean telling if the username is used
  */
 async function isUsernameUsed(username) {
-    const user = await new Promise(function (resolve, reject) {
+    return new Promise(function (resolve, reject) {
         const query = 'SELECT username FROM User WHERE username = ' + pool.escape(username);
         pool.query(query, function (error, results) {
             if (error) {
                 req.err = error;
                 reject(error);
             } else {
-                resolve(results);
+                resolve(results.length > 0);
             }
         });
     });
-
-    return user.length == 1;
 }
 
+/**
+ * Sends the user to the shopping cart page if they are logged in.
+ */
 router.get("/shoppingcart", function (req, res, next) {
     if (req.session.user) {
-        return res.render("shoppingCart", { title: "Webstore - Home" });
+        return res.render("shoppingCart");
     }
 
     return res.redirect("/");

@@ -9,7 +9,7 @@ var hbs = require("hbs");
 hbs.registerPartials(path.join(__dirname, "views/partials"));
 
 var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+var usersRouter = require("./routes/API/users");
 var productRouter = require("./routes/API/product");
 var homeRouter = require("./routes/home");
 var orderRouter = require("./routes/API/order");

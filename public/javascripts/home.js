@@ -17,6 +17,8 @@ $(document).ready(function () {
   });
 
   $("#logout-opt").on("click", logout);
+
+  $(".product").on("click", viewProduct);
 });
 
 // functions for opening and closing the side menu for product categories
@@ -67,4 +69,8 @@ function logout() {
       console.error(err);
     },
   });
+}
+
+function viewProduct() {
+  window.location.href = "/product-info";
 }

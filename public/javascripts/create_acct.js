@@ -18,14 +18,14 @@ function signUp() {
 
     // creates a frame that holds the info for a product.
 	function createFrameDiv(element) {
-		<div>
-		Username: <input id="username" type="text">
-			<span id="correctUser"></span>
+		<div id ="div1">
+			<p id="username" type="text">Username: </p>
+		    <span id="correctUser"></span>
 			<br>
-		Password: <input id="password" type="password">
+			<p id="password" type="text">Password:</p> 
 			<span id="sugPassword"></span>
-			<br>
-		Email: <input type="text"><br>
+				<br>
+					<p id="email" type="text">Email:</p>
 			<br><br>
 		</div>
 

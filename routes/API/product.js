@@ -26,7 +26,7 @@ const pool = mysql.createPool(sqlConfig);
 /**
  * Gets all the products for a page if there is no id in query.  Each page consists at most of 5 items.
  * @Returns json object containing all products for page.
-*/
+ */
 router.get('/', async function (req, res, next) {
     if (req.query && req.query.id) {
         next();
@@ -85,30 +85,30 @@ router.get('/', async function (req, res, next) {
 router.post('/add', multer.single('photo'), async function (req, res) {
     if (req.file && req.session.user && req.session.user.accessLevel === 1) {
         console.log(req.file);
-        
+
         const insertId = await googleAuth()
             .then((jWTClient) => uploadToDrive(req.file, req.file.originalname, req.file.mimetype, jWTClient))
             .then((imgId) => new Promise(function (resolve, reject) {
                 console.log(imgId);
 
-            const query = 'INSERT INTO Product VALUES (NULL, ?, ?, ?, ?, ?, ?)';
-            const values = [
-                req.body.productName,
-                req.body.productBrand,
-                req.body.productInfo,
-                imgId,
-                req.body.productStock,
-                req.body.productCost
-            ];
-            pool.query(query, values, function (error, results) {
-                if (error) {
-                    req.err = error;
-                    reject(error);
-                } else {
-                    resolve(results.insertId);
-                }
-            });
-        }));
+                const query = 'INSERT INTO Product VALUES (NULL, ?, ?, ?, ?, ?, ?)';
+                const values = [
+                    req.body.productName,
+                    req.body.productBrand,
+                    req.body.productInfo,
+                    imgId,
+                    req.body.productStock,
+                    req.body.productCost
+                ];
+                pool.query(query, values, function (error, results) {
+                    if (error) {
+                        req.err = error;
+                        reject(error);
+                    } else {
+                        resolve(results.insertId);
+                    }
+                });
+            }));
 
         return res.json(insertId);
 
@@ -200,16 +200,16 @@ router.put("/update/:id", async function (req, res) {
             req.body.productStock,
             req.body.productCost,
             req.body.productId
-            ];
-            pool.query(query, values, function (error, results) {
-                if (error) {
-                    req.err = error;
-                    reject(error);
-                } else {
-                    resolve(results.insertId);
-                }
-            });
+        ];
+        pool.query(query, values, function (error, results) {
+            if (error) {
+                req.err = error;
+                reject(error);
+            } else {
+                resolve(results.insertId);
+            }
         });
+    });
     return res.json(insertId);
 });
 

@@ -147,6 +147,63 @@ async function isUsernameUsed(username) {
 }
 
 /**
+ * Updates the user's account information
+ */
+router.put("/update", async function () {
+    if (!req.session.user) {
+        return res.json({ insertId: -1, success: false }).status(400);
+    }
+
+    const insertId = await new Promise(function (resolve, reject) {
+        const query = 'UPDATE User SET username = ?, PASSWORD = ?, address = ?, email = ? WHERE userId = ?;';
+        const values = [
+            req.body.username,
+            req.body.password,
+            req.body.address,
+            req.body.email,
+            req.session.user.userId
+        ];
+        pool.query(query, values, function (error, results) {
+            if (error) {
+                req.err = error;
+                reject(error);
+            } else {
+                resolve(results.insertId);
+            }
+        });
+    }).catch((err) => {
+        return -1; // bad query return -1 indicating a failure.
+    });
+
+    return res.json({ insertId: insertId, success: insertId > -1 }).status(insertId > -1 ? 200 : 409);
+});
+
+/**
+ * Delete a user's account.
+ */
+router.delete("/delete/:password", async function () {
+    if (!req.session.user || !req.body.password) {
+        return res.json({ insertId: -1, success: false }).status(400);
+    }
+
+    const insertId = await new Promise(function (resolve, reject) {
+        const query = 'DELETE FROM User WHERE id = ' + pool.escape(req.session.user.userId) + ' AND password = ' + pool.escape(req.body.password);
+        pool.query(query, function (error, results) {
+            if (error) {
+                req.err = error;
+                reject(error);
+            } else {
+                resolve(results.insertId);
+            }
+        });
+    }).catch((err) => {
+        return -1; // bad query return -1 indicating a failure.
+    });
+
+    return res.json({ insertId: insertId, success: insertId > -1 }).status(insertId > -1 ? 200 : 409);
+});
+
+/**
  * Sends the user to the shopping cart page if they are logged in.
  */
 router.get("/shoppingcart", function (req, res, next) {

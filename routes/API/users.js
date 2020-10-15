@@ -100,6 +100,8 @@ router.post("/add", async function (req, res) {
         return res.json({ insertId: -1, success: false }).status(400);
     }
 
+    console.log(req.body);
+
     const insertId = await isUsernameUsed(req.body.username)
         .then((isTaken) => new Promise(function (resolve, reject) {
             if (isTaken) {
@@ -122,7 +124,9 @@ router.post("/add", async function (req, res) {
                     }
                 });
             }
-        }));
+        })).catch((err) => {
+            return -1; // bad query return -1 indicating a failure.
+        });
 
     return res.json({ insertId: insertId, success: insertId > -1 }).status(insertId > -1 ? 200 : 409);
 });

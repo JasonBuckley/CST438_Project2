@@ -22,20 +22,19 @@ router.use(session({
 }));
 
 /** 
- * Defualt users path.  If given an incomplete query or none it redirects to the home page.
+ * Default users path. If given an incomplete query or none it redirects to the home page.
  */
 router.get('/', function (req, res, next) {
+    console.log(req.session.user)
     // send them to login middleware
     if (req.query && req.query.username && req.query.password) {
         next();
         return;
     }
 
-    console.log(req.session.user);
-
     // if an user is an admin bring them to the admin screen
-    if (req.session && req.session.user && req.session.user.accessLevel === 1) {
-        console.log(req.session.user.username + "has logged in as admin");
+    if (req.session && req.session.user && req.session.user[0].accessLevel === 1) {
+        console.log(req.session.user[0].username + "has logged in as admin");
         return res.render("adminScreen");
     }
 
@@ -70,12 +69,14 @@ router.get('/', async function (req, res, next) {
         });
     });
 
-    if (Array.isArray(user) && user.length) {
-        req.session.user = user[0];
-        req.session.username = req.query.username;
-    } else {
+    try {
+        if (user && user.length > 0) {
+            req.session.user = user;
+        } else {
+            delete req.session.user;
+        }
+    } catch (err) {
         delete req.session.user;
-        delete req.session.username;
     }
 
     return res.redirect("/");
@@ -137,28 +138,18 @@ router.post("/add", async function (req, res) {
  * @return boolean telling if the username is used
  */
 async function isUsernameUsed(username) {
-    return new Promise(function (resolve, reject) {
+    const user = await new Promise(function (resolve, reject) {
         const query = 'SELECT username FROM User WHERE username = ' + pool.escape(username);
         pool.query(query, function (error, results) {
             if (error) {
                 req.err = error;
                 reject(error);
             } else {
-                resolve(results.length > 0);
+                resolve(results);
             }
         });
     });
+    return user.length == 1;
 }
-
-/**
- * Sends the user to the shopping cart page if they are logged in.
- */
-router.get("/shoppingcart", function (req, res, next) {
-    if (req.session.user) {
-        return res.render("shoppingCart");
-    }
-
-    return res.redirect("/");
-});
 
 module.exports = router;

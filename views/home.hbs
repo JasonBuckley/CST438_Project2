@@ -90,7 +90,7 @@
                     </div>
                 </div>
                 <div id="tc-modal-body" class="modal-body">
-                    <form>
+                    <form method="post" action="/users/add"> 
                         <div id="create_username">
                             <span class="fa fa-user-o" id="username-icon"></span>
                             <input type="text" id="CA_username" name="username" placeholder="Username" autocomplete="off"
@@ -101,16 +101,21 @@
                             <input type="password" id="CA_password" name="password" placeholder="Password"
                                    autocomplete="off" required>
                         </div>
+                        <div id="create_address">
+                            <span class="fa fa-key" id="address-icon"></span>
+                            <input type="text" id="CA_address" name="address" placeholder="Address"
+                                   autocomplete="off" required>
+                        </div>
                         <div>
-                        <span class="fa fa-key" id="password-icon"></span>
-                        <input type="password" id="CA_password" name="password" placeholder="Password"
-                               autocomplete="off" required>
-                </div>
-                    <div id="create_email">
-                        <input type="email" id="CA_email" name="email" placeholder="Email" autocomplete="off" required/>
-                    </div>
-                <button type="submit" id="login-button">Create Account</button>
-                </form>
+                            <span class="fa fa-key" id="password-icon"></span>
+                            <input type="password" id="CA_password" name="password" placeholder="Password"
+                                   autocomplete="off" required>
+                        </div>
+                        <div id="create_email">
+                            <input type="email" id="CA_email" name="email" placeholder="Email" autocomplete="off" required />
+                        </div>
+                        <button type="submit" id="login-button">Create Account</button>
+                    </form>
             </div>
                 <div class="modal-footer">
                     <button type="button" data-toggle="modal" data-target="#loginForm" class="cancelbtn">Cancel</button>

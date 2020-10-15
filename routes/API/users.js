@@ -97,30 +97,39 @@ router.get("/logout", function (req, res) {
  * @return int representing id where it was entered
  */
 router.post("/add", async function (req, res) {
-    if (await isUsernameUsed(req.body.username)) {
-        return res.json(-1);
+    if (!req.body.username || !req.body.password || !req.body.address || !req.body.email) {
+        return res.json({ insertId: -1, success: false }).status(400);
     }
 
-    const insertId = await new Promise(function (resolve, reject) {
-        const query = 'INSERT INTO User VALUES (NULL, ?, ?, ?, ?, ?)';
-        const values = [
-            0,
-            req.body.username,
-            req.body.password,
-            req.body.address,
-            req.body.email
-        ];
-        pool.query(query, values, function (error, results) {
-            if (error) {
-                req.err = error;
-                reject(error);
-            } else {
-                resolve(results.insertId);
-            }
-        });
-    });
+    console.log(req.body);
 
-    return res.json(insertId);
+    const insertId = await isUsernameUsed(req.body.username)
+        .then((isTaken) => new Promise(function (resolve, reject) {
+            if (isTaken) {
+                resolve(-1); // indicates a failed insertion.
+            } else {
+                const query = 'INSERT INTO User VALUES (NULL, ?, ?, ?, ?, ?)';
+                const values = [
+                    0,
+                    req.body.username,
+                    req.body.password,
+                    req.body.address,
+                    req.body.email
+                ];
+                pool.query(query, values, function (error, results) {
+                    if (error) {
+                        req.err = error;
+                        reject(error);
+                    } else {
+                        resolve(results.insertId);
+                    }
+                });
+            }
+        })).catch((err) => {
+            return -1; // bad query return -1 indicating a failure.
+        });
+
+    return res.json({ insertId: insertId, success: insertId > -1 }).status(insertId > -1 ? 200 : 409);
 });
 
 /**

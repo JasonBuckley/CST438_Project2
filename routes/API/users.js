@@ -25,16 +25,17 @@ router.use(session({
  * Default users path. If given an incomplete query or none it redirects to the home page.
  */
 router.get('/', function (req, res, next) {
-    console.log(req.session.user)
     // send them to login middleware
     if (req.query && req.query.username && req.query.password) {
         next();
         return;
     }
 
+    console.log(req.session.user);
+
     // if an user is an admin bring them to the admin screen
-    if (req.session && req.session.user && req.session.user[0].accessLevel === 1) {
-        console.log(req.session.user[0].username + "has logged in as admin");
+    if (req.session && req.session.user && req.session.user.accessLevel === 1) {
+        console.log(req.session.user.username + "has logged in as admin");
         return res.render("adminScreen");
     }
 
@@ -51,7 +52,6 @@ router.get('/', function (req, res, next) {
  * @param string password
  * @return json object with user info
  */
-
 router.get('/', async function (req, res, next) {
     console.log("entering login middle ware");
     const query = 'SELECT * FROM User WHERE username = ' + pool.escape(req.query.username) +
@@ -69,14 +69,12 @@ router.get('/', async function (req, res, next) {
         });
     });
 
-    try {
-        if (user && user.length > 0) {
-            req.session.user = user;
-        } else {
-            delete req.session.user;
-        }
-    } catch (err) {
+    if (Array.isArray(user) && user.length) {
+        req.session.user = user[0];
+        req.session.username = req.query.username;
+    } else {
         delete req.session.user;
+        delete req.session.username;
     }
 
     return res.redirect("/");
@@ -100,8 +98,6 @@ router.post("/add", async function (req, res) {
     if (!req.body.username || !req.body.password || !req.body.address || !req.body.email) {
         return res.json({ insertId: -1, success: false }).status(400);
     }
-
-    console.log(req.body);
 
     const insertId = await isUsernameUsed(req.body.username)
         .then((isTaken) => new Promise(function (resolve, reject) {
@@ -151,5 +147,88 @@ async function isUsernameUsed(username) {
     });
     return user.length == 1;
 }
+
+/**
+ * Updates the user's account information
+ */
+router.put("/update", async function (req, res) {
+    if (!req.session.user || !req.body.username || !req.body.password || !req.body.address || !req.body.email) {
+        return res.json({ insertId: -1, success: false }).status(400);
+    }
+
+    username = req.body.username != "" ? req.body.username : req.session.user.username;
+    password = req.body.password != "" ? req.body.password : req.session.user.password;
+    address = req.body.address != "" ? req.body.address : req.session.user.address;
+    email = req.body.email != "" ? req.body.email : req.session.user.email;
+
+    const insertId = await isUsernameUsed(req.body.username)
+        .then((isTaken) => new Promise(function (resolve, reject) {
+            if (isTaken) {
+                resolve(-1);
+            } else {
+                const query = 'UPDATE User SET username = ?, PASSWORD = ?, address = ?, email = ? WHERE userId = ?;';
+                const values = [
+                    username,
+                    password,
+                    address,
+                    email,
+                    req.session.user.userId
+                ];
+                pool.query(query, values, function (error, results) {
+                    if (error) {
+                        req.err = error;
+                        reject(error);
+                    } else {
+                        resolve(results.insertId);
+                    }
+                });
+            }
+        }).catch((err) => {
+            return -1; // bad query return -1 indicating a failure.
+        }));
+
+    return res.json({ insertId: insertId, success: insertId > -1 }).status(insertId > -1 ? 200 : 409);
+});
+
+/**
+ * Delete a user's account.
+ */
+router.delete("/delete", async function (req, res) {
+    if (!req.session.user || !req.body.password) {
+        return res.json({ insertId: -1, success: false }).status(400);
+    }
+
+    const deleteId = await new Promise(function (resolve, reject) {
+        const query = 'DELETE FROM User WHERE userId = ' + pool.escape(req.session.user.userId) + ' AND password = ' + pool.escape(req.body.password);
+        pool.query(query, function (error, results) {
+            if (error) {
+                req.err = error;
+                reject(error);
+            } else {
+                resolve(results.insertId);
+            }
+        });
+    }).catch((err) => {
+        return -1; // bad query return -1 indicating a failure.
+    });
+
+    if (deleteId > -1) {
+        delete req.session.user;
+        delete req.session.username;
+    }
+
+    return res.json({ deleteId: deleteId, success: deleteId > -1 }).status(deleteId > -1 ? 200 : 409);
+});
+
+/**
+ * Sends the user to the shopping cart page if they are logged in.
+ */
+router.get("/shoppingcart", function (req, res, next) {
+    if (req.session.user) {
+        return res.render("shoppingCart");
+    }
+
+    return res.redirect("/");
+});
 
 module.exports = router;

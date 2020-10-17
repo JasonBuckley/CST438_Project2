@@ -122,6 +122,8 @@ router.post("/add", async function (req, res) {
                     }
                 });
             }
+        }).catch((err) => {
+            return -1;
         }));
 
     return res.json({ insertId: insertId, success: insertId > -1 }).status(insertId > -1 ? 200 : 409);
@@ -154,26 +156,31 @@ router.put("/update", async function () {
         return res.json({ insertId: -1, success: false }).status(400);
     }
 
-    const insertId = await new Promise(function (resolve, reject) {
-        const query = 'UPDATE User SET username = ?, PASSWORD = ?, address = ?, email = ? WHERE userId = ?;';
-        const values = [
-            req.body.username,
-            req.body.password,
-            req.body.address,
-            req.body.email,
-            req.session.user.userId
-        ];
-        pool.query(query, values, function (error, results) {
-            if (error) {
-                req.err = error;
-                reject(error);
+    const insertId = await isUsernameUsed(req.body.username)
+        .then((isTaken) => new Promise(function (resolve, reject) {
+            if (isTaken) {
+
             } else {
-                resolve(results.insertId);
+                const query = 'UPDATE User SET username = ?, PASSWORD = ?, address = ?, email = ? WHERE userId = ?;';
+                const values = [
+                    req.body.username,
+                    req.body.password,
+                    req.body.address,
+                    req.body.email,
+                    req.session.user.userId
+                ];
+                pool.query(query, values, function (error, results) {
+                    if (error) {
+                        req.err = error;
+                        reject(error);
+                    } else {
+                        resolve(results.insertId);
+                    }
+                });
             }
-        });
-    }).catch((err) => {
-        return -1; // bad query return -1 indicating a failure.
-    });
+        }).catch((err) => {
+            return -1; // bad query return -1 indicating a failure.
+        }));
 
     return res.json({ insertId: insertId, success: insertId > -1 }).status(insertId > -1 ? 200 : 409);
 });
@@ -186,7 +193,7 @@ router.delete("/delete/:password", async function () {
         return res.json({ insertId: -1, success: false }).status(400);
     }
 
-    const insertId = await new Promise(function (resolve, reject) {
+    const deleteId = await new Promise(function (resolve, reject) {
         const query = 'DELETE FROM User WHERE id = ' + pool.escape(req.session.user.userId) + ' AND password = ' + pool.escape(req.body.password);
         pool.query(query, function (error, results) {
             if (error) {
@@ -200,7 +207,12 @@ router.delete("/delete/:password", async function () {
         return -1; // bad query return -1 indicating a failure.
     });
 
-    return res.json({ insertId: insertId, success: insertId > -1 }).status(insertId > -1 ? 200 : 409);
+    if (deleteId > -1) {
+        delete req.session.user;
+        delete req.session.username;
+    }
+
+    return res.json({ deleteId: deleteId, success: deleteId > -1 }).status(deleteId > -1 ? 200 : 409);
 });
 
 /**

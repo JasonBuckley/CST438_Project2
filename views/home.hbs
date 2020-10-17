@@ -19,8 +19,9 @@
                 <li class="option"><a href="#" class="tag"><i class="fa fa-shopping-basket"></i>cart</a></li>
                 {{#if username}}
                 <li class="option dropdown">
-                    <a href="#" class="tag dropdown-toggle" data-toggle="dropdown">{{ username }} <i
-                            class="fa fa-user-circle fa-lg"></i></a>
+                    <a href="#" class="tag dropdown-toggle" data-toggle="dropdown">
+                        {{ username }} <i class="fa fa-user-circle fa-lg"></i>
+                    </a>
 
                     <div>
                         <ul class="dropdown-menu">
@@ -30,8 +31,11 @@
                     </div>
                 </li>
                 {{else}}
-                <li data-toggle="modal" data-target="#loginForm" class="option"><a href="#" class="tag">login <i
-                            class="fa fa-user-circle fa-lg"></i></a></li>
+                <li data-toggle="modal" data-target="#loginForm" class="option">
+                    <a href="#" class="tag">
+                        login <i class="fa fa-user-circle fa-lg"></i>
+                    </a>
+                </li>
                 {{/if}}
             </ul>
         </div>
@@ -53,12 +57,12 @@
                         <div id="username-input">
                             <span class="fa fa-user-o" id="username-icon"></span>
                             <input type="text" id="username" name="username" placeholder="Username" autocomplete="off"
-                                required>
+                                   required>
                         </div>
                         <div id="password-input">
                             <span class="fa fa-key" id="password-icon"></span>
                             <input type="password" id="password" name="password" placeholder="Password"
-                                autocomplete="off" required>
+                                   autocomplete="off" required>
                         </div>
 
                         <button type="submit" id="login-button">Login</button>
@@ -66,8 +70,55 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" data-toggle="modal" data-target="#loginForm" class="cancelbtn">Cancel</button>
-                    <span class="new-here" data-toggle="modal" data-target="#createAccountForm">New here? <a
-                            href="#">Create Account</a> </span>
+                    <span class="new-here" data-toggle="modal" data-target="#createAcctForum">
+                        New here? <a href="#">Create Account</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="createAcctForum" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title-container">
+                        <h5 class="modal-title">Create Account</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="tc-modal-body" class="modal-body">
+                    <form method="post" action="/users/add"> 
+                        <div id="create_username">
+                            <span class="fa fa-user-o" id="username-icon"></span>
+                            <input type="text" id="CA_username" name="username" placeholder="Username" autocomplete="off"
+                                   required>
+                        </div>
+                        <div id="create_password">
+                            <span class="fa fa-key" id="password-icon"></span>
+                            <input type="password" id="CA_password" name="password" placeholder="Password"
+                                   autocomplete="off" required>
+                        </div>
+                        <div id="create_address">
+                            <span class="fa fa-key" id="address-icon"></span>
+                            <input type="text" id="CA_address" name="address" placeholder="Address"
+                                   autocomplete="off" required>
+                        </div>
+                        <div>
+                            <span class="fa fa-key" id="password-icon"></span>
+                            <input type="password" id="CA_password" name="password" placeholder="Password"
+                                   autocomplete="off" required>
+                        </div>
+                        <div id="create_email">
+                            <input type="email" id="CA_email" name="email" placeholder="Email" autocomplete="off" required />
+                        </div>
+                        <button type="submit" id="login-button">Create Account</button>
+                    </form>
+            </div>
+                <div class="modal-footer">
+                    <button type="button" data-toggle="modal" data-target="#loginForm" class="cancelbtn">Cancel</button>
                 </div>
             </div>
         </div>
@@ -76,42 +127,48 @@
     <section class="header">
         <div class="side-menu" id="side-menu">
             <ul>
-                <li>Category-1<i class="fa fa-angle-right"></i>
+                <li>
+                    Category-1<i class="fa fa-angle-right"></i>
                     <ul>
                         <li>Sub Menu-1</li>
                         <li>Sub Menu-1</li>
                         <li>Sub Menu-1</li>
                     </ul>
                 </li>
-                <li>Category-2<i class="fa fa-angle-right"></i>
+                <li>
+                    Category-2<i class="fa fa-angle-right"></i>
                     <ul>
                         <li>Sub Menu-2</li>
                         <li>Sub Menu-2</li>
                         <li>Sub Menu-2</li>
                     </ul>
                 </li>
-                <li>Category-3<i class="fa fa-angle-right"></i>
+                <li>
+                    Category-3<i class="fa fa-angle-right"></i>
                     <ul>
                         <li>Sub Menu-3</li>
                         <li>Sub Menu-3</li>
                         <li>Sub Menu-3</li>
                     </ul>
                 </li>
-                <li>Category-4<i class="fa fa-angle-right"></i>
+                <li>
+                    Category-4<i class="fa fa-angle-right"></i>
                     <ul>
                         <li>Sub Menu-4</li>
                         <li>Sub Menu-4</li>
                         <li>Sub Menu-4</li>
                     </ul>
                 </li>
-                <li>Category-5<i class="fa fa-angle-right"></i>
+                <li>
+                    Category-5<i class="fa fa-angle-right"></i>
                     <ul>
                         <li>Sub Menu-5</li>
                         <li>Sub Menu-5</li>
                         <li>Sub Menu-5</li>
                     </ul>
                 </li>
-                <li>Category-6<i class="fa fa-angle-right"></i>
+                <li>
+                    Category-6<i class="fa fa-angle-right"></i>
                     <ul>
                         <li>Sub Menu-6</li>
                         <li>Sub Menu-6</li>
@@ -158,7 +215,7 @@
                     <div class="product-top">
                         <img src="./images/lamp-1.png" alt="">
                         <div class="overlay-right">
-                            <button type="button" class="btn btn-secondary" title="Quick Shop">
+                            <button type="button" class="btn btn-secondary product" title="Quick Shop">
                                 <i class="fa fa-eye"></i>
                             </button>
                             <button type="button" class="btn btn-secondary" title="Add to Cart">
@@ -175,7 +232,7 @@
                     <div class="product-top">
                         <img src="./images/lamp-2.png" alt="">
                         <div class="overlay-right">
-                            <button type="button" class="btn btn-secondary" title="Quick Shop">
+                            <button type="button" class="btn btn-secondary product" title="Quick Shop">
                                 <i class="fa fa-eye"></i>
                             </button>
                             <button type="button" class="btn btn-secondary" title="Add to Cart">
@@ -192,7 +249,7 @@
                     <div class="product-top">
                         <img src="./images/lamp-3.png" alt="">
                         <div class="overlay-right">
-                            <button type="button" class="btn btn-secondary" title="Quick Shop">
+                            <button type="button" class="btn btn-secondary product" title="Quick Shop">
                                 <i class="fa fa-eye"></i>
                             </button>
                             <button type="button" class="btn btn-secondary" title="Add to Cart">
@@ -209,7 +266,7 @@
                     <div class="product-top">
                         <img src="./images/lamp-4.png" alt="">
                         <div class="overlay-right">
-                            <button type="button" class="btn btn-secondary" title="Quick Shop">
+                            <button type="button" class="btn btn-secondary product" title="Quick Shop">
                                 <i class="fa fa-eye"></i>
                             </button>
                             <button type="button" class="btn btn-secondary" title="Quick Cart">
@@ -232,7 +289,7 @@
                 <div class="col-md-3">
                     <h1>CST 438 - Software Engineering</h1>
                     <img src="./images/logo.png" width="100px" height="100px"
-                        style="background-color: white;border-radius: 50px">
+                         style="background-color: white;border-radius: 50px">
                     <br><br>
                     <p>CSUMB 2020©</p>
                 </div>
@@ -254,8 +311,10 @@
             <hr>
 
             <a class="link" href="https://github.com/JasonBuckley/CST438_Project2" target="_blank"
-                aria-label="View source on GitHub">View Source on GitHub <i class="fa fa-github"
-                    aria-hidden="true"></i></a>
+               aria-label="View source on GitHub">
+                View Source on GitHub <i class="fa fa-github"
+                                         aria-hidden="true"></i>
+            </a>
             <p>THIS IS A FICTITIOUS SITE :)</p>
         </div>
     </section>

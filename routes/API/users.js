@@ -22,20 +22,19 @@ router.use(session({
 }));
 
 /** 
- * Defualt users path.  If given an incomplete query or none it redirects to the home page.
+ * Default users path. If given an incomplete query or none it redirects to the home page.
  */
 router.get('/', function (req, res, next) {
+    console.log(req.session.user)
     // send them to login middleware
     if (req.query && req.query.username && req.query.password) {
         next();
         return;
     }
 
-    console.log(req.session.user);
-
     // if an user is an admin bring them to the admin screen
-    if (req.session && req.session.user && req.session.user.accessLevel === 1) {
-        console.log(req.session.user.username + "has logged in as admin");
+    if (req.session && req.session.user && req.session.user[0].accessLevel === 1) {
+        console.log(req.session.user[0].username + "has logged in as admin");
         return res.render("adminScreen");
     }
 
@@ -70,12 +69,14 @@ router.get('/', async function (req, res, next) {
         });
     });
 
-    if (Array.isArray(user) && user.length) {
-        req.session.user = user[0];
-        req.session.username = req.query.username;
-    } else {
+    try {
+        if (user && user.length > 0) {
+            req.session.user = user;
+        } else {
+            delete req.session.user;
+        }
+    } catch (err) {
         delete req.session.user;
-        delete req.session.username;
     }
 
     return res.redirect("/");
@@ -100,6 +101,8 @@ router.post("/add", async function (req, res) {
         return res.json({ insertId: -1, success: false }).status(400);
     }
 
+    console.log(req.body);
+
     const insertId = await isUsernameUsed(req.body.username)
         .then((isTaken) => new Promise(function (resolve, reject) {
             if (isTaken) {
@@ -122,9 +125,9 @@ router.post("/add", async function (req, res) {
                     }
                 });
             }
-        }).catch((err) => {
-            return -1;
-        }));
+        })).catch((err) => {
+            return -1; // bad query return -1 indicating a failure.
+        });
 
     return res.json({ insertId: insertId, success: insertId > -1 }).status(insertId > -1 ? 200 : 409);
 });
@@ -135,24 +138,25 @@ router.post("/add", async function (req, res) {
  * @return boolean telling if the username is used
  */
 async function isUsernameUsed(username) {
-    return new Promise(function (resolve, reject) {
+    const user = await new Promise(function (resolve, reject) {
         const query = 'SELECT username FROM User WHERE username = ' + pool.escape(username);
         pool.query(query, function (error, results) {
             if (error) {
                 req.err = error;
                 reject(error);
             } else {
-                resolve(results.length > 0);
+                resolve(results);
             }
         });
     });
+    return user.length == 1;
 }
 
 /**
  * Updates the user's account information
  */
 router.put("/update", async function () {
-    if (!req.session.user) {
+    if (!req.session.user || !req.body.username || !req.body.password || !req.body.address || !req.body.email) {
         return res.json({ insertId: -1, success: false }).status(400);
     }
 

@@ -9,11 +9,11 @@ var hbs = require("hbs");
 hbs.registerPartials(path.join(__dirname, "views/partials"));
 
 var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+var usersRouter = require("./routes/API/users");
 var productRouter = require("./routes/API/product");
 var homeRouter = require("./routes/home");
+var productInfoRouter = require("./routes/product_info");
 var orderRouter = require("./routes/API/order");
-
 var app = express();
 
 // create connection to database
@@ -23,7 +23,7 @@ const sqlConfig = mysql.createConnection ({
   password: process.env.SQL_PASSWORD,
   host: process.env.SQL_HOST,
   port: process.env.SQL_PORT,
-  database: process.env.SQL_DATABASE,
+  database: process.env.SQL_DATABASE
 });
 
 // creates a pool to handle query requests.
@@ -42,6 +42,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", homeRouter);
 app.use("/users", usersRouter);
 app.use("/product", productRouter);
+app.use("/product-info", productInfoRouter);
 app.use("/order", orderRouter);
 
 // catch 404 and forward to error handler

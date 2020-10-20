@@ -20,7 +20,6 @@ function signUp() {
 	function createFrameDiv(element) {
 		<div id ="div1">
 			<p id="username" type="text">Username: </p>
-		    <span id="correctUser"></span>
 			<br>
 			<p id="password" type="text">Password:</p> 
 				<br>

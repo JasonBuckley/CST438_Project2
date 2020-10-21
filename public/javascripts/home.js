@@ -8,6 +8,38 @@ $(document).ready(function () {
   //   // do something
   // });
 
+  populateProducts();
+
+  document.querySelectorAll("[id^='slider-img-']")
+    .forEach(function(el) {
+      el.onclick = function() {
+        console.log(this.id)
+        let productId = $(`#${this.id}`).attr("productId");
+        console.log(productId);
+        viewProduct(productId);
+      }
+    })
+    
+  document.querySelectorAll("[id^='featured-img-']")
+  .forEach(function(el) {
+    el.onclick = function() {
+      console.log(this.id)
+      let productId = $(`#${this.id}`).attr("productId");
+      console.log(productId);
+      viewProduct(productId);
+    }
+  })
+
+  document.querySelectorAll("[id^='featured-img-quick-']")
+  .forEach(function(el) {
+    el.onclick = function() {
+      console.log(this.id)
+      let productId = $(`#${this.id}`).attr("productId");
+      console.log(productId);
+      viewProduct(productId);
+    }
+  })
+
   $("#back-to-top-btn").on("click", function () {
     backToTop();
   });
@@ -17,8 +49,6 @@ $(document).ready(function () {
   });
 
   $("#logout-opt").on("click", logout);
-
-  $(".product").on("click", viewProduct);
 });
 
 // functions for opening and closing the side menu for product categories
@@ -71,6 +101,34 @@ function logout() {
   });
 }
 
-function viewProduct() {
-  window.location.href = "/product-info";
+function viewProduct(productId) {
+  window.location.href = `/product/${productId}`;
+}
+
+function populateProducts() {
+  $.ajax({
+    type: "GET",
+    url: "/product",
+    dataType: "json",
+    success: function(result, status) {
+        console.log("got logout status back", result);
+        let products = result.products;
+        console.log("Products: ", products);
+        
+        for (let i = 0; i < 4; i++) {
+          let productId = products[i].productId;
+          let img = products[i].imgId ? "https://drive.google.com/uc?export=download&id=" + products[i].imgId : "./images/Empty.png";
+
+          $(`#slider-img-${i+1}`).attr({"src": img, "productId": productId});
+          $(`#featured-img-${i+1}`).attr({"src": img, height: "200", width: "200", "productId": productId});
+          $(`#feat-prod-name-${i+1}`).html(`${products[i].name}`);
+          $(`#feat-prod-price-${i+1}`).html(`$${products[i].cost}`);
+          $(`#featured-img-quick-${i+1}`).attr({"productId": productId});
+        }
+    },
+    error: function(xhr, status, error) {
+        err = eval("error: (" + xhr.responseText + ")");
+        console.error(err);
+    }
+  });
 }

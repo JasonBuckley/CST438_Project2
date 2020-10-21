@@ -174,7 +174,7 @@ body {
   background: #0b7dda;
 }
 
-/* styles for login modal */
+/* styles for modals */
 .modal-title-container {
   width: 100%;
   display: flex;
@@ -188,17 +188,18 @@ body {
   justify-content: space-between;
 }
 
-#username,
-#password {
+.modal_input {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
   display: inline-block;
   border: 1px solid #ccc;
   box-sizing: border-box;
+  padding-left: 2.375rem;
 }
 
-#login-button {
+#login-button,
+#create-account-button {
   background-color: #2196f3;
   color: white;
   padding: 14px 20px;
@@ -208,7 +209,8 @@ body {
   width: 100%;
 }
 
-#login-button:hover {
+#login-button:hover,
+#create-account-button:hover {
   background-color: #0b7dda;
 }
 
@@ -227,13 +229,7 @@ span.new-here {
   padding-top: 16px;
 }
 
-#username,
-#password {
-  padding-left: 2.375rem;
-}
-
-#username-icon,
-#password-icon {
+.icon {
   position: absolute;
   z-index: 2;
   padding-top: 15px;

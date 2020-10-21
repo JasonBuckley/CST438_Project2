@@ -60,10 +60,10 @@ router.get('/', async function (req, res, next) {
  * @Parameter req.query.id productId
  * @Return returns a product and switches to a page with product info.
  */
-router.get('/', async function (req, res, next) {
+router.get('/:productId', async function (req, res, next) {
     var product = await new Promise(function (resolve, reject) {
         const query = 'SELECT * FROM Product WHERE productId = ?';
-        const values = [req.query.id];
+        const values = [req.params.productId];
 
         pool.query(query, values, function (error, results) {
             if (error) {
@@ -75,8 +75,18 @@ router.get('/', async function (req, res, next) {
         });
     });
 
-    product = Array.isArray(product) && product.length ? JSON.stringify(product[0]) : "'NONE'";
-    res.render('productPage', { product: product });
+    // product = Array.isArray(product) && product.length ? JSON.stringify(product[0]) : "'NONE'";
+    product = Array.isArray(product) && product.length ? product[0] : "'NONE'";
+
+    if (req.session.user) {
+      res.render("product", {
+        title: "Webstore",
+        username: req.session.username,
+        product: product
+      });
+    } else {
+      res.render("product", { title: "Webstore", product: product });
+    }
 });
 
 /**

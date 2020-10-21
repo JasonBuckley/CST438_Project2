@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/", function (req, res, next) {
+router.get("/:productId", function (req, res, next) {
+  let id = req.params.productId;
+  // request.params.username;
+  console.log("From prod info: ", id);
+
   if (req.session.user) {
     res.render("product_info", {
       title: "Webstore - Home",

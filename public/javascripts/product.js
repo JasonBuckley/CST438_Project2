@@ -75,11 +75,93 @@ $(document).ready(function () {
       }
     });
   });
-  
- 
-  
 
+  $("#create-account-form").submit(function(event) {
+    event.preventDefault(); 
+    var post_url = $(this).attr("action"); 
+    var request_method = $(this).attr("method"); 
+    var form_data = $(this).serialize();
+    
+    $.ajax({
+      url : post_url,
+      type: request_method,
+      data : form_data
+    }).done(function(response) { 
+      if (response.success) {
+        window.location.href = "/";
+      } else {
+        $("#create-account-error").show();
+      }
+    });
   
+  });
   
+ // Methods for password validation (inspired by w3schools example)
+  var password = document.getElementById("CA_password");
+  var letter = document.getElementById("letter");
+  var capital = document.getElementById("capital");
+  var number = document.getElementById("number");
+  var length = document.getElementById("length");
+  var character = document.getElementById("character");
   
+  // When the user clicks on the password field, show the message box
+  password.onfocus = function () {
+    document.getElementById("message").style.display = "block";
+  }
   
+  // When the user clicks outside of the password field, hide the message box
+  password.onblur = function () {
+    document.getElementById("message").style.display = "none";
+  }
+  
+  // When the user starts to type something inside the password field
+  password.onkeyup = function () {
+    // Validate lowercase letters
+    var lowerCaseLetters = /[a-z]/g;
+    if (password.value.match(lowerCaseLetters)) {
+      letter.classList.remove("invalid");
+      letter.classList.add("valid");
+    } else {
+      letter.classList.remove("valid");
+      letter.classList.add("invalid");
+    }
+  
+    // Validate capital letters
+    var upperCaseLetters = /[A-Z]/g;
+    if (password.value.match(upperCaseLetters)) {
+      capital.classList.remove("invalid");
+      capital.classList.add("valid");
+    } else {
+      capital.classList.remove("valid");
+      capital.classList.add("invalid");
+    }
+  
+    // Validate numbers
+    var numbers = /[0-9]/g;
+    if (password.value.match(numbers)) {
+      number.classList.remove("invalid");
+      number.classList.add("valid");
+    } else {
+      number.classList.remove("valid");
+      number.classList.add("invalid");
+    }
+  
+    // Validate special characters
+    var specialCharacters = /[!@#$%^&*]/g;
+    if (password.value.match(specialCharacters)) {
+      character.classList.remove("invalid");
+      character.classList.add("valid");
+    } else {
+      character.classList.remove("valid");
+      character.classList.add("invalid");
+    }
+  
+    // Validate length
+    if (password.value.length >= 6) {
+      length.classList.remove("invalid");
+      length.classList.add("valid");
+    } else {
+      length.classList.remove("valid");
+      length.classList.add("invalid");
+    }
+  }

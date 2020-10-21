@@ -28,6 +28,8 @@ const pool = mysql.createPool(sqlConfig);
  * @Returns json object containing all products for page.
 */
 router.get('/', async function (req, res, next) {
+    let where = "";
+
     if (req.query && req.query.id) {
         next();
         return;
@@ -37,9 +39,40 @@ router.get('/', async function (req, res, next) {
         return res.json({ success: false }).status(400);
     }
 
+    if (req.query && Object.keys(req.query).length > 0) {
+        where = "WHERE ";
+
+        let isFirstCondition = false;
+
+        if (req.query.search) {
+            where += `name LIKE ${pool.escape('%' + req.query.search + '%')}`;
+            isFirstCondition = true;
+        }
+
+        if (req.query.min) {
+            if (isFirstCondition) {
+                where += " AND cost >= " + req.query.min;
+            } else {
+                where += "cost >= " + req.query.min;
+                isFirstCondition = true;
+            }
+        }
+
+        if (req.query.max) {
+            if (isFirstCondition) {
+                where += " AND cost <= " + req.query.max;
+            } else {
+                where += "cost <= " + req.query.max;
+                isFirstCondition = true;
+            }
+        }
+    }
+
     var products = await new Promise(function (resolve, reject) {
+        where = where === "WHERE " ? "" : where;
         page = req.query.page ? req.query.page : 0;
-        const query = `SELECT * FROM Product Limit 5 OFFSET ${page * 5};`
+        const query = `SELECT * FROM Product ${where} Limit 5 OFFSET ${page * 5};`
+
         pool.query(query, function (error, results) {
             if (error) {
                 req.err = error;

@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div id="tc-modal-body" class="modal-body">
-                    <form action="/users">
+                    <form action="/users" method="get" id="login-form">
                         <div id="username-input">
                             <span class="fa fa-user-o icon"></span>
                             <input type="text" id="LI_username" name="username" placeholder="Username"
@@ -61,6 +61,7 @@
 
                         <button type="submit" id="login-button">Login</button>
                     </form>
+                    <div id="login-error" class="alert alert-danger mt-3">¡Error loging in!</div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" data-toggle="modal" data-target="#loginForm" class="cancelbtn">Cancel</button>

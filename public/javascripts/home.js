@@ -48,6 +48,7 @@ $(document).ready(function () {
     window.location.href = "/";
   });
 
+
   $("#logout-opt").on("click", logout);
 });
 
@@ -132,3 +133,24 @@ function populateProducts() {
     }
   });
 }
+
+
+
+$("#login-form").submit(function(event) {
+	event.preventDefault(); 
+	var post_url = $(this).attr("action"); 
+	var request_method = $(this).attr("method"); 
+	var form_data = $(this).serialize(); 
+	
+	$.ajax({
+		url : post_url,
+		type: request_method,
+		data : form_data
+	}).done(function(response) { 
+    if (response.success == true) {
+      window.location.href = "/";
+    } else {
+      $("#login-error").show();
+    }
+	});
+});

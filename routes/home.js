@@ -13,11 +13,8 @@ router.use(
 
 router.get("/", function (req, res, next) {
   if (req.session.user) {
-    console.log("USER: " + req.session.username);
-    console.log("logged in!!!!!");
     res.render("home", { title: "Webstore", username: req.session.username });
   } else {
-    console.log("Not logged in!!!");
     res.render("home", { title: "Webstore" });
   }
 });

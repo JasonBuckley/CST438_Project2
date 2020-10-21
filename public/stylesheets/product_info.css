@@ -242,6 +242,15 @@ span.new-here {
   color: #aaa;
 }
 
+#login-error {
+  text-align: center;
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  display: none;
+}
+
 /* styles for product container */
 .container {
   max-width: 1200px;

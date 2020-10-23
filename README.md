@@ -19,12 +19,7 @@ The following functionality is completed:
 - [x] User can ...
 - [ ] User can ...
 
-<a class="link" 
-   href="https://cst438-g-webstore.herokuapp.com/" 
-   target="_blank"
-   aria-label="View source on GitHub">
-   Our app is hosted on Heroku <i class="fa fa-github" aria-hidden="true"></i>
-</a>
+Our app is hosted on [Heroku](https://cst438-g-webstore.herokuapp.com/)
 
 ## Notes
 Discard if not filled

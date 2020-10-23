@@ -15,6 +15,36 @@ const sqlConfig = {
 // creates a pool to handle query requests.
 const pool = mysql.createPool(sqlConfig);
 
+
+router.get("/checkout", async function (req, res) {
+    if (!req.session.user && !req.query.processedOrders) {
+        res.send("Must be Logged In");
+    }
+
+    console.log(req.query.processedOrders);
+   
+    var orders = await new Promise(function (resolve, reject) {
+        var orderIds = req.query.processedOrders.split(",");
+        var tokens = new Array(orderIds.length).fill('?').join(',');
+        const query = `SELECT * FROM Product_Order WHERE orderId in (${tokens});`
+        const values = orderIds;
+
+        pool.query(query, values, function (error, results) {
+            if (error) {
+                req.err = error;
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    }).catch((err) => {
+        return [];
+    });
+
+    // change to res.render("/pathOfCheckoutPage", {orders: orders}) to send information to a checkout page
+    return res.send(JSON.stringify(orders));
+});
+
 /**
  * Gets all the orders if there is no id in query
  * @Returns json object containing all product_orders
@@ -76,9 +106,6 @@ router.post("/add", async function (req, res) {
         return res.json(-1);
     }
 
-    console.log(req.body);
-    console.log("got here?");
-
     const orderId = await new Promise(function (resolve, reject) { // makes sure the request is less then the stock
         if (req.body.amount <= 0) {
             reject(req.body.productId + ": Can not send us stock");
@@ -87,8 +114,6 @@ router.post("/add", async function (req, res) {
             const values = [
                 req.body.productId,
             ];
-
-            console.log(values, req.body.amount);
 
             pool.query(query, values, function (error, results) {
                 if (error) {
@@ -145,7 +170,7 @@ router.post("/add", async function (req, res) {
     });
 
     if (currentstock) {
-        return res.json(-1 - currentstock); // doing the opposite plus 1 on the client side will give product stock.
+        return res.json(-1 - currentstock); // doing the opposite minus 1 on the client side will give product stock.
     }
 
     return res.json(orderId);
@@ -168,10 +193,6 @@ router.get("/delete/:id", async function (req, res) {
         });
     });
     return res.send(deletedId + "has been Deleted");
-});
-
-router.get("/checkout", async function (req, res) {
-
 });
 
 module.exports = router;

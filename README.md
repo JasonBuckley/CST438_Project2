@@ -4,9 +4,12 @@ The **Webstore** is a web application and REST API that simulates
 shopping in an online store.
 
 Link to site: https://cst438-g-webstore.herokuapp.com/
-
+[Android Async HTTP](https://github.com/codepath/CPAsyncHttpClient)
 # Developers
-Jason Buckley, Joseph Villegas, Debbie Meda, and Brian Baird
+Jason Buckley, 
+[Joseph Villegas](https://github.com/Joseph-Villegas), 
+[Debbie Meda](https://github.com/bitmonst3r), and 
+[Brian Baird](https://github.com/BrianCSUMB)
 
 ## User Stories
 

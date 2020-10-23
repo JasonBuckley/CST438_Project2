@@ -20,7 +20,7 @@ The following functionality is completed:
 - [ ] User can ...
 
 <a class="link" 
-   href="https://github.com/JasonBuckley/CST438_Project2" 
+   href="https://cst438-g-webstore.herokuapp.com/" 
    target="_blank"
    aria-label="View source on GitHub">
    Our app is hosted on Heroku <i class="fa fa-github" aria-hidden="true"></i>

@@ -29,7 +29,7 @@ The following functionality is completed:
 ## Notes
 Discard if not filled
 
-## libraries used
+## Libraries used
 
 - Example 1
 - Example 2

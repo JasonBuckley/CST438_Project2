@@ -36,7 +36,7 @@ $(document).ready(function () {
                             <img src="${img}" alt="Picture of ${product.name}" class="img-fluid rounded mb-2 shadow ">
                         </div>
                         <div class="col-md-7 text-left mt-sm-2">
-                            <h4><strong><a href="/product?id=${product.productId}">${product.name}</a></strong></h4>
+                            <h4><strong><a href="/product/${product.productId}">${product.name}</a></strong></h4>
                             <p class="font-weight-light">${product.brand}</p>
                         </div>
                     </div>

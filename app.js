@@ -12,7 +12,6 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/API/users");
 var productRouter = require("./routes/API/product");
 var homeRouter = require("./routes/home");
-var productInfoRouter = require("./routes/product_info");
 var orderRouter = require("./routes/API/order");
 var cartRouter = require("./routes/API/cart");
 var app = express();
@@ -43,7 +42,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", homeRouter);
 app.use("/users", usersRouter);
 app.use("/product", productRouter);
-app.use("/product-info", productInfoRouter);
 app.use("/order", orderRouter);
 app.use("/cart", cartRouter);
 

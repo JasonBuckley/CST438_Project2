@@ -70,24 +70,67 @@ router.get('/', async function (req, res, next) {
  * Add order
  */
 router.post("/add", async function (req, res) {
-    const orderId = await new Promise(function (resolve, reject) {
-        const query = 'INSERT INTO Product_Order VALUES (NULL, ?, ?, ?, ?, ?)';
+    if (!req.session.user || !req.body.productId || !req.body.amount) { // only users can make orders
+        return res.json(-1);
+    }
+
+    const orderId = await new Promise(function (resolve, reject) { // makes sure the request is less then the stock
+        if (req.body.amount <= 0) {
+            reject(req.body.productId + ": Can not send us stock");
+        } else {
+            const query = `SELECT stock FROM Product WHERE productId = ?;`;
+            const values = [
+                req.body.productId,
+            ];
+
+            pool.query(query, values, function (error, results) {
+                if (error) {
+                    req.err = error;
+                    reject(error);
+                } else {
+                    if (results[0].stock < req.body.amount) {
+                        reject(req.body.productId + ": not enough stock");
+                    }
+                    resolve(true);
+                }
+            });
+        }
+    }).then(() => new Promise(function (resolve, reject) { // makes the order
+        const query = `INSERT INTO Product_Order VALUES (NULL, ?, ?, CURDATE(), CURRENT_TIME(), ?);`;
         const values = [
-            req.body.userId,
+            req.session.user.userId,
             req.body.productId,
-            req.body.date,
-            req.body.time,
             req.body.amount
         ];
+
         pool.query(query, values, function (error, results) {
             if (error) {
                 req.err = error;
                 reject(error);
             } else {
-                resolve(results.orderId);
+                resolve(results.insertId);
             }
         });
+    })).then((insertId) => new Promise(function (resolve, reject) { // if the order is successfully made reduce the stock of the product accordingly
+        let query = `UPDATE Product SET stock = stock - ? WHERE productId = ?;`;
+        const values = [
+            req.body.amount,
+            req.body.productId
+        ];
+
+        pool.query(query, values, function (error, results) {
+            if (error) {
+                req.err = error;
+                reject(error);
+            } else {
+                resolve(insertId);
+            }
+        });
+    })).catch((err) => {
+        console.log(err);
+        return -1; // bad query return -1 indicating a failure.
     });
+
     return res.json(orderId);
 });
 

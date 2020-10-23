@@ -72,12 +72,12 @@ router.get('/', async function (req, res, next) {
     if (Array.isArray(user) && user.length) {
         req.session.user = user[0];
         req.session.username = req.query.username;
+        return res.json({ success: true });
     } else {
         delete req.session.user;
         delete req.session.username;
+        return res.json({ success: false });
     }
-
-    return res.redirect("/");
 });
 
 /**

@@ -37,3 +37,13 @@ CREATE TABLE Product_Order(
 	FOREIGN KEY(userId) REFERENCES User (userId) ON DELETE CASCADE,
 	FOREIGN KEY(productId) REFERENCES Product (productId) ON DELETE CASCADE
 );
+
+CREATE TABLE Cart(
+    cartId INT AUTO_Increment,
+    userId INT,
+    productId INT,
+    amount INT NOT NULL,
+    PRIMARY KEY(cartId),
+    FOREIGN KEY(userId) REFERENCES User(userId) ON DELETE CASCADE,
+    FOREIGN KEY(productId) REFERENCES Product(productId) ON DELETE CASCADE
+);

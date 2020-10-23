@@ -1,22 +1,257 @@
-<h1>Upload Image</h1>
+<table>
+    <thead>
+        <tr>
+            <th style="width:30%"></th>
+            <th style="width:70%"></th>
+        </tr>
+    </thead>
+    <tr>
+        <td>
+            <div class="pl-5 pt-3">
+                <h1>Upload Image</h1>
 
-<form id="addProductForm" action="/product/add" method="post" enctype="multipart/form-data">
-    <div><label class="pr-2">Name:</label><input id="productName" type="text" name="productName"></div>
-    <div><label class="pr-2">Brand:</label><input id="productBrand" type="text" name="productBrand"></div>
-    <div><label class="pr-2">Information:</label><input id="productInfo" type="text" name="productInfo"></div>
-    <div><label class="pr-2">Stock:</label><input class="numericCheck" id="productStock" type="text" name="productStock"></div>
-    <div><label class="pr-2">Cost:</label><input class="numericCheck" id="productCost" type="text" name="productCost"></div>
-    <input id="productImageFile" type="file" accept="image/*" name="photo">
-    <input type="submit" value="Add Product">
-</form>
+                <form id="addProductForm" action="/product/add" method="post" enctype="multipart/form-data">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:50px"></th>
+                                <th style="width:50px"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label class="pr-2">Name:</label>
+                                </td>
+                                <td>
+                                    <input id="productName" type="text" name="productName">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="pr-2">Brand:</label>
+                                </td>
+                                <td>
+                                    <input id="productBrand" type="text" name="productBrand">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="pr-2">Information:</label>
+                                </td>
+                                <td>
+                                    <input id="productInfo" type="text" name="productInfo">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="pr-2">Stock:</label>
+                                </td>
+                                <td>
+                                    <input class="numericCheck" id="productStock" type="text" name="productStock">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="pr-2">Cost:</label>
+                                </td>
+                                <td>
+                                    <input class="numericCheck" id="productCost" type="text" name="productCost">
+                                </td>
+                            </tr>
+                            <tr>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div>
+                        <input id="productImageFile" type="file" accept="image/*" name="photo">
+                        <br />
+                        <br />
+                        <input type="submit" value="Add Product">
+                        <br />
+                        <br />
+                        <div>
+                            <p id="errorMessage"></p>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </td>
+        <td>
+            <div class="container-fluid flex-row-reverse">
+
+                <div class="row w-100">
+                    <table style="max-height:90%" id="shoppingCart" class="table table-condensed table-responsive">
+                        <thead>
+                            <tr>
+                                <th style="width:35%">Product</th>
+                                <th style="width:30%">Info</th>
+                                <th style="width:15%">Available</th>
+                                <th style="width:15%">Price</th>
+                                <th style="width:5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="productContainer">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-end pl-5">
+                    <p class="text-center">
+                        <button id="prevPage">
+                            <
+                        </button>
+                        <button id="nextPage">
+                            >
+                        </button>
+                    </p>
+                </div>
+
+                <script src="../javascripts/productList.js"></script>
+            </div>
+        </td>
+    </tr>
+
+</table>
+
+<div class="col-sm-6 mb-3 mb-m-1 order-md-1 text-md-left">
+    <a href="/">Back to Landing Page</a>
+</div>
+
+<div class="modal fade" id="updateProductForm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title mx-auto">Update Product</h4>
+            </div>
+            <form id="updateProductFormData" action="/product/update">
+                <div class="modal-body">
+
+                    <div>
+                        <div class="hide">
+                            <div class="row">
+                                <div class="col-3">
+                                    <label>ProductId: </label>
+                                </div>
+                                <div class="col-1">
+                                    <input id="productId" value="-1" type="text" name="productId" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3">
+                                <label>Name:</label>
+                            </div>
+                            <div class="col-1">
+                                <input id="productName" name="productName" type="text">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3">
+                                <label>Brand:</label>
+                            </div>
+                            <div class="col-1">
+                                <input id="productBrand" name="productBrand" type="text">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3">
+                                <label>Info:</label>
+                            </div>
+                            <div class="col-1">
+                                <input id="productInfo" name="productInfo" type="text">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3">
+                                <label>Stock:</label>
+                            </div>
+                            <div class="col-1">
+                                <input class="numericCheck" id="productStock" type="text" name="productStock" maxlength="4">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3">
+                                <label>Cost:</label>
+                            </div>
+                            <div class="col-1">
+                                <input class="numericCheck" id="productCost" type="text" name="productCost">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-info" value="Update Product">
+                    <button type="button" data-toggle="modal" data-dismiss="modal" data-target="#updateProductForm" class="close btn btn-danger">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script>
     $(document).ready(function () {
-        
         $("#addProductForm").on("submit", function (event) {
-            if (!isFormValid()) {
-                event.preventDefault();
+            event.preventDefault();
+            if (isFormValid()) {
+                let formdata = new FormData($(this)[0]);
+                let file = $("#productImageFile")[0].files[0];
+                console.log(file);
+
+                $.ajax({
+                    url: '/product/add',
+                    type: 'post',
+                    data: formdata,
+                    contentType: false,
+                    processData: false,
+                    success: function (data, status) {
+                        console.log(data);
+                        if (data > -1) {
+                            getProducts(page).then((result) => {
+                                if (result.success) {
+                                    $("#productContainer").empty();
+                                    refreshProducts(result);
+                                }
+                            });
+                            $("#errorMessage").text("Product added to db successfully. Insert Id: " + data);
+                        } else {
+                            $("#errorMessage").text("Product not added due to impropper data" + data);
+                        }
+                    },
+                    complete: function (data, status) { //optional, used for debugging purposes
+                        console.log(status);
+                    }
+                });
             }
+        });
+
+        $("#updateProductForm").on("submit", function (event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: '/product/update',
+                type: 'put',
+                data: $("#updateProductFormData").serialize(),
+                success: function (data, status) {
+                    console.log(data);
+                    if (data > -1) {
+                        getProducts(page).then((result) => {
+                            if (result.success) {
+                                $("#productContainer").empty();
+                                refreshProducts(result);
+                                $("#updateProductForm .close").click();
+                            }
+                        });  
+                    }
+                },
+                complete: function (data, status) { //optional, used for debugging purposes
+                    console.log(status);
+                }
+            });
+
         });
 
         $(".numericCheck").on("keypress", validateNumber);
@@ -28,50 +263,173 @@
         function validateNumber(event) {
             var key = event.which || event.charCode || event.keyCode || 0;
 
-            if (key == 8 || key == 46 || key == 37 || key == 39){
+            if (key == 8 || key == 46 || key == 37 || key == 39) {
                 return true;
             } else if (key < 48 || key > 57) {
                 return false;
             }
 
             return true;
-        }; 
+        };
 
         function isFormValid() {
             isValid = true;
 
+            $("#errorMessage").text("");
+
             if (!$("#productName").val()) {
                 isValid &= false;
                 console.log("Incorrect Name");
+                $("#errorMessage").text($("#errorMessage").text() + ", " + "Incorrect Name");
             }
 
             if (!$("#productBrand").val()) {
                 isValid &= false;
                 console.log("Incorrect brand");
+                $("#errorMessage").text($("#errorMessage").text() + ", " + "Incorrect brand");
             }
 
             if (!$("#productInfo").val()) {
                 isValid &= false;
                 console.log("Incorrect info");
+                $("#errorMessage").text($("#errorMessage").text() + ", " + "Incorrect info");
             }
 
             if (!$("#productStock").val() || !($("#productStock").val().indexOf(".") == -1)) {
                 isValid &= false;
                 console.log("Incorrect stock");
+                $("#errorMessage").text($("#errorMessage").text() + ", " + "Incorrect stock");
             }
 
             if (!$("#productCost").val() || parseFloat($("#productCost").val()) <= 0) {
                 isValid &= false;
                 console.log("Incorrect cost");
+                $("#errorMessage").text($("#errorMessage").text() + ", " + "Incorrect cost");
             }
 
-            validFileTypes = ["jpg", "png"];
+            validFileTypes = ["jpg", "png", "JPG", "PNG"];
             if (!$("#productImageFile").val() || !validFileTypes.includes($("#productImageFile").val().split(".").pop())) {
                 isValid &= false;
                 console.log("Incorrect image");
+                $("#errorMessage").text($("#errorMessage").text() + ", " + "Incorrect image");
             }
+
+            $("#errorMessage").text($("#errorMessage").text().substring(1));
 
             return isValid;
         }
+
+        let page = 0;
+
+        // on load gets first page
+        getProducts(page).then((result) => {
+            if (result.success) {
+                $("#productContainer").empty();
+                refreshProducts(result);
+            }
+        });
+
+        // grabs the products from the product api given a certain page number
+        function getProducts(page) {
+            return $.ajax({
+                url: "/product?page=" + page,
+                method: "GET",
+                dataType: "json",
+                success: function (result, status) {
+                    console.log(result);
+                    return result;
+                }
+            }); //ajax
+        }
+
+        function refreshProducts(result) {
+            $("#productContainer").empty();
+            result.products.forEach((product) => {
+                createFrameDiv(product);
+            });
+        }
+
+        // creates a frame that holds the info for a product.
+        function createFrameDiv(product) {
+            img = product.imgId ? "https://drive.google.com/uc?export=download&id=" + product.imgId : "/images/Empty.png";
+            $("#productContainer").append(
+                `
+                <tr id="productItem${product.productId}">
+                    <td>
+                        <div class="row">
+                            <div class="col-md-5 text-left">
+                                <img src="${img}" alt="Picture of ${product.name}" class="img-fluid rounded mb-2 shadow ">
+                            </div>
+                            <div class="col-md-7 text-left mt-sm-2">
+                                <h4><strong><a href="/product/${product.productId}">${product.name}</a></strong></h4>
+                                <p class="font-weight-light">${product.brand}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td><p style="overflow:hidden; max-height: 4.9em">${product.info}</p></td>
+                    <td>
+                        <span>${product.stock}</span> Available
+                    </td>
+                    <td class="actions" data-th="">
+                        $<span>${product.cost}</span>
+                    </td>
+                    <td>
+                        <div class="text-right">
+                            <button id="deleteProduct${product.productId}" class="btn btn-white border-secondary bg-white btn-md mb-2">Delete</button>
+                            <button data-toggle="modal" data-target="#updateProductForm" id="updateProduct${product.productId}" class="btn btn-white border-secondary bg-white btn-md mb-2">Update</button>
+                        </div>
+                    </td>
+                </tr>
+
+                `
+            );
+
+            $(`#deleteProduct${product.productId}`).on('click', function () {
+                $(`#productItem${product.productId}`).remove();
+
+                $.ajax({
+                    url: "/product/delete/" + product.productId,
+                    method: "GET",
+                    dataType: "json",
+                    success: function (result, status) {
+                        console.log(result);
+                        $("#errorMessage").text(product.name + " has been removed");
+                    }
+                });
+
+                getProducts(page).then((result) => {
+                    refreshProducts(result);
+                });
+            });
+
+            $(`#updateProduct${product.productId}`).on('click', function () {
+                $("#productId").val(product.productId);
+            });
+        }
+
+        // goes to the previous page
+        $("#prevPage").on('click', function () {
+            if (page == 0) {
+                return;
+            }
+            getProducts(page - 1).then((result) => {
+                if (result.success && Array.isArray(result.products) && result.products.length) {
+                    page--;
+                    refreshProducts(result);
+                }
+            });
+        });
+
+        // goes to the next page
+        $("#nextPage").on('click', function () {
+            getProducts(page + 1).then((result) => {
+                if (result.success && Array.isArray(result.products) && result.products.length) {
+                    page++;
+                    refreshProducts(result);
+                }
+            });
+        });
+
     });
 </script>
+

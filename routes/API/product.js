@@ -130,9 +130,9 @@ router.get('/:productId', async function (req, res, next) {
  * Adds a product to the database.
  */
 router.post('/add', multer.single('photo'), async function (req, res) {
+    console.log(req.body);
+    console.log(req.file);
     if (req.file && req.session.user && req.session.user.accessLevel === 1) {
-        console.log(req.file);
-
         const insertId = await googleAuth()
             .then((jWTClient) => uploadToDrive(req.file, req.file.originalname, req.file.mimetype, jWTClient))
             .then((imgId) => new Promise(function (resolve, reject) {
@@ -155,15 +155,16 @@ router.post('/add', multer.single('photo'), async function (req, res) {
                         resolve(results.insertId);
                     }
                 });
-            }));
+            })).catch((err) => {
+                console.log(err);
+                return -1;
+            });
 
         return res.json(insertId);
 
     } else {
         res.redirect("/users");
     }
-
-    res.send('File uploaded');
 });
 
 /**
@@ -236,7 +237,7 @@ async function uploadToDrive(file, name, mimetype, jWTClient) {
  * @param name, brand, info, imgId, stock, cost
  * @return int representing id where it was entered
  */
-router.put("/update/:id", async function (req, res) {
+router.put("/update", async function (req, res) {
     //find id, if there update info, update db
     const insertId = await new Promise(function (resolve, reject) {
         const query = 'UPDATE Product SET name = ?, brand = ?, info = ?, stock = ?, cost = ? WHERE productId = ?';
@@ -266,16 +267,19 @@ router.put("/update/:id", async function (req, res) {
 router.get("/delete/:id", async function (req, res) {
     const deletedId = await new Promise(function (resolve, reject) {
         const query = 'DELETE FROM Product WHERE productId = ?';
-        const values = [req.query.id];
+        const values = [req.params.id];
         pool.query(query, values, function (error, results) {
             if (error) {
                 req.err = error;
                 reject(error);
             } else {
-                resolve(results);
+                console.log(results);
+                resolve(results.insertId);
             }
         });
     });
+
+    console.log("deleteId:" + deletedId);
     return res.send(deletedId + "has been Deleted");
 });
 

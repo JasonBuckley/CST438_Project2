@@ -226,7 +226,8 @@ body {
 }
 
 /* styles for product displays */
-.slider {
+.slider,
+.search-res {
   width: 85%;
   margin-left: 15%;
   padding: 0 10px;
@@ -245,7 +246,8 @@ body {
 }
 
 @media only screen and (max-width: 980px) {
-  .slider {
+  .slider,
+  .search-res {
     width: 100%;
     margin-left: 0;
   }

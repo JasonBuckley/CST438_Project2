@@ -88,6 +88,10 @@ router.get('/', async function (req, res, next) {
     res.json({ success: (Array.isArray(products) && products.length > 0), products: products });
 });
 
+router.get("/test", function (req, res) {
+    res.render("test");
+});
+
 /**
  * Gets a product given a productId.
  * @Parameter req.query.id productId
@@ -273,10 +277,6 @@ router.get("/delete/:id", async function (req, res) {
         });
     });
     return res.send(deletedId + "has been Deleted");
-});
-
-router.get("/test", function (req, res) {
-    res.render("test");
 });
 
 module.exports = router;

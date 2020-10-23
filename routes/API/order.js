@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const mysql = require('mysql');
+const { route } = require('..');
 
 // gets the config settings for the db
 const sqlConfig = {
@@ -70,9 +71,13 @@ router.get('/', async function (req, res, next) {
  * Add order
  */
 router.post("/add", async function (req, res) {
+    let currentstock;
     if (!req.session.user || !req.body.productId || !req.body.amount) { // only users can make orders
         return res.json(-1);
     }
+
+    console.log(req.body);
+    console.log("got here?");
 
     const orderId = await new Promise(function (resolve, reject) { // makes sure the request is less then the stock
         if (req.body.amount <= 0) {
@@ -83,12 +88,20 @@ router.post("/add", async function (req, res) {
                 req.body.productId,
             ];
 
+            console.log(values, req.body.amount);
+
             pool.query(query, values, function (error, results) {
                 if (error) {
                     req.err = error;
                     reject(error);
                 } else {
+                    if (Array.isArray(results) && results.length < 1) {
+                        reject("Invalid Product Id");
+                        return;
+                    }
+
                     if (results[0].stock < req.body.amount) {
+                        currentstock = results[0].stock;
                         reject(req.body.productId + ": not enough stock");
                     }
                     resolve(true);
@@ -131,6 +144,10 @@ router.post("/add", async function (req, res) {
         return -1; // bad query return -1 indicating a failure.
     });
 
+    if (currentstock) {
+        return res.json(-1 - currentstock); // doing the opposite plus 1 on the client side will give product stock.
+    }
+
     return res.json(orderId);
 });
 
@@ -151,6 +168,10 @@ router.get("/delete/:id", async function (req, res) {
         });
     });
     return res.send(deletedId + "has been Deleted");
+});
+
+router.get("/checkout", async function (req, res) {
+
 });
 
 module.exports = router;

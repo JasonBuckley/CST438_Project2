@@ -3,7 +3,7 @@
         <div class="container">
             <div class="col-lg-12 col-md-12 col-12">
                 <h3 class="display-5 mb-2 text-center font-weight-bold">Shopping Cart</h3>
-                <p class="mb-5 text-center"> <span id="cartCount" class="text-info font-weight-bold">3</span> items in your cart </p>
+                <p class="mb-5 text-center"> <span id="cartCount" class="text-info font-weight-bold">0</span> items in your cart </p>
             </div>
 
             <div class="row w-100">
@@ -65,36 +65,36 @@
             cost = round((element.cost * parseFloat(element.amount)), 2);
             $("#cartItemHolder").append(
                 `
-                            <tr id="cartItem${element.cartId}">
-                                <td>
-                                    <div class="row">
-                                        <div class="col-md-3 text-left">
-                                            <img src="${img}" alt="Picture of ${element.name}" class="img-fluid rounded mb-2 shadow ">
-                                                </div>
-                                            <div class="col-md-9 text-left mt-sm-2">
-                                                <h4><strong>${element.name}</strong></h4>
-                                                <p class="font-weight-light">${element.brand}</p>
-                                            </div>
-                                        </div>
-                                        </td>
-                                    <td> $<span id="totalCost${element.cartId}">${cost}</span></td>
-                                    <td>
-                                        <input id="amount${element.cartId}" type="text" class="form-control form-control-lg text-center amount" value="${element.amount}", maxlength=4>
-                                    </td>
-                                    <td class="actions" data-th="">
-                                        <div class="text-right">
-                                            <button id="deleteCart${element.cartId}" class="btn btn-white border-secondary bg-white btn-md mb-2">X</button>
-                                        </div>
-                                    </td>
-                            </tr>
-                            `
+                <tr id="cartItem${element.cartId}">
+                    <td>
+                        <div class="row">
+                            <div class="col-md-3 text-left">
+                                <img src="${img}" alt="Picture of ${element.name}" class="img-fluid rounded mb-2 shadow ">
+                            </div>
+                            <div class="col-md-9 text-left mt-sm-2">
+                                <h4><strong>${element.name}</strong></h4>
+                                <p class="font-weight-light">${element.brand}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td> $<span id="totalCost${element.cartId}">${cost}</span></td>
+                    <td>
+                        <input id="amount${element.cartId}" type="text" class="form-control form-control-lg text-center amount" value="${element.amount}", maxlength=4>
+                    </td>
+                    <td class="actions" data-th="">
+                        <div class="text-right">
+                            <button id="deleteCart${element.cartId}" class="btn btn-white border-secondary bg-white btn-md mb-2">X</button>
+                        </div>
+                   </td>
+                </tr>
+                `
             );
 
             items[element.cartId] = element;
             $("#cartCount").text(++cartCount);
 
             subtotal += round(parseFloat(element.cost) * parseFloat(element.amount), 2);
-            $("#cartSubtotal").text(subtotal);
+            $("#cartSubtotal").text(round(subtotal, 2));
 
             // update amount on change
             $(`#amount${element.cartId}`).on('keyup', function () {
@@ -154,70 +154,69 @@
         });
 
         // alert the user if any cart item has invalid amounts.
-        $("#checkout").on('click', function (e) {
+        $("#checkout").on('click', async function (event) {
             event.preventDefault();
-            let failedOrder = false;
 
-            Object.keys(items).forEach(function (key) {
-                let item = items[key];
-                makeOrder(item.productId, $(`#amount${item.cartId}`).val()).then((result) => {
+            new Promise(async function (resolve, reject) {
+                let passedOrders = true;
+                let keys = Object.keys(items);
+                let count = cartCount;
+                for (let i = 0; i < keys.length; i++) {
+                    let item = items[keys[i]];
+                    temp = await makeOrder(item.productId, $(`#amount${item.cartId}`).val()).then((result) => {
+                        if (result > 0) {
+                            subtotal -= $(`#totalCost${item.cartId}`).text() ? round(parseFloat($(`#totalCost${item.cartId}`).text()), 2) : 0;
+                            $("#cartSubtotal").text(round(subtotal, 2));
+                            removeCartItem(item.cartId);
+                            $(`#cartItem${item.cartId}`).remove();
+                            delete items[item.cartId];
 
-                    if (result > 0) {
-                        subtotal -= $(`#totalCost${item.cartId}`).text() ? round(parseFloat($(`#totalCost${item.cartId}`).text()), 2) : 0;
-                        $("#cartSubtotal").text(round(subtotal, 2));
-                        removeCartItem(item.cartId);
-                        cartCount--;
-                        $(`#cartItem${item.cartId}`).remove();
-                        delete items[item.cartId];
+                            processedOrders.push(result);
+                            localStorage.setItem("processedOrders", processedOrders);
+                        } else if (result == -1) {
+                            subtotal -= $(`#totalCost${item.cartId}`).text() ? round(parseFloat($(`#totalCost${item.cartId}`).text()), 2) : 0;
+                            $("#cartSubtotal").text(round(subtotal, 2));
+                            removeCartItem(item.cartId);
+                            $(`#cartItem${item.cartId}`).remove();
+                            delete items[item.cartId];
+                        } else {
+                            item.stock = -result + 1;
+                            $(`#amount${item.cartId}`).val(-result - 1);
+                            subtotal -= $(`#totalCost${item.cartId}`).text() ? round(parseFloat($(`#totalCost${item.cartId}`).text()), 2) : 0;
+                            $(`#totalCost${item.cartId}`).text((round(item.cost * (-result - 1), 2) + ""));
+                            subtotal += $(`#totalCost${item.cartId}`).text() ? round(parseFloat($(`#totalCost${item.cartId}`).text()), 2) : 0;
+                            $("#cartSubtotal").text(round(subtotal, 2));
+                        }
 
-                        processedOrders.push(result);
-                        localStorage.setItem("processedOrders", processedOrders);
-                    } else if (result == -1) {
-                        failedOrder = true;
-                        subtotal -= $(`#totalCost${item.cartId}`).text() ? round(parseFloat($(`#totalCost${item.cartId}`).text()), 2) : 0;
-                        $("#cartSubtotal").text(round(subtotal, 2));
-                        removeCartItem(item.cartId);
-                        cartCount--;
-                        $(`#cartItem${item.cartId}`).remove();
-                        delete items[item.cartId];
-
-                    } else {
-                        failedOrder = true;
-                        item.stock = -result + 1;
-                        $(`#amount${item.cartId}`).val(-result + 1);
-                        subtotal -= $(`#totalCost${item.cartId}`).text() ? round(parseFloat($(`#totalCost${item.cartId}`).text()), 2) : 0;
-                        $(`#totalCost${item.cartId}`).text((round(item.cost * (-result + 1000), 2) + ""));
-                        subtotal += $(`#totalCost${item.cartId}`).text() ? round(parseFloat($(`#totalCost${item.cartId}`).text()), 2) : 0;
-                        $("#cartSubtotal").text(round(subtotal, 2));
+                        $("#cartCount").text(cartCount);
+                        return result;
+                    });
+                    passedOrders &= temp > 0;
+                    if (temp >= -1) {
+                        count--;
                     }
+                }
 
-                    $("#cartCount").text(cartCount);
-                });
-            });
+                resolve({ failedOrder: passedOrders == 0, count: count });
+            }).then((results) => {
+                console.log(processedOrders);
+                cartCount = results.count;
+                $("#cartCount").text(cartCount);
+                if (results.failedOrder && results.count > 0) {
+                    alert("The remaining items could not be processed due to your request being greater than stock.  Items with zero stock have been removed from your cart.");
+                    return;
+                } else if (results.failedOrder) {
+                    console.log("entered");
+                    alert("Items with zero stock have been removed from your cart, and will not be processed! Sorry for the inconvenience.");
+                }
 
-            if (failedOrder && cartCount > 0) {
-                alert("The remaining items could not be processed due to your request being greater than stock.  Items with zero stock have been removed from your cart.");
+                nochanges = true;
+                window.localStorage.removeItem("processedOrders"); // deletes orders on checkout
+                window.location = "/order/checkout?processedOrders=" + processedOrders + "";
                 return;
-            } else if (failedOrder) {
-                alert("Items with zero stock have been removed from your cart, and will not be processed! Sorry for the inconvenience.");
-            }
-
-            localStorage.removeItem("processedOrders");
-
-            /*
-            $.ajax({
-                url: "/checkout",
-                type: "GET",
-                data: {
-                    processOrders: processedOrders
-                },
-                success: function (result, status) {
-                    return result;
-                },
             });
-            */
 
-            console.log("clicked");
+
         });
 
         function updateCartItem(cartId, amount) {
@@ -235,7 +234,6 @@
         }
 
         function makeOrder(productId, amount) {
-            console.log(productId, amount);
             return $.ajax({
                 url: "/order/add",
                 type: "POST",

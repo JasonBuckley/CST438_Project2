@@ -34,7 +34,7 @@
                         <a id="checkout" href="/order/checkout" class="btn btn-primary mb-4 btn-lg pl-5 pr-5">Checkout</a>
                     </div>
                     <div class="col-sm-6 mb-3 mb-m-1 order-md-1 text-md-left">
-                        <a href="/">Continue Shopping</a>
+                        <a id="continueShopping" href="/">Continue Shopping</a>
                     </div>
                 </div>
             </div>
@@ -46,89 +46,82 @@
     <script>
         let subtotal = 0;
         let cartCount = 0;
+        let items = {};
+        let nochanges = true;
 
-        addCartItem(
-            {
-                name: "Oranges",
-                info: "Sack of oranges",
-                amount: "5",
-                cost: "4.25",
-                cartId: 1,
-                brand: "Grape Co."
+        $.ajax({
+            url: "/cart/all",
+            method: "GET",
+            success: function (result, status) {
+                result.forEach(function (element) {
+                    addCartItem(element);
+                });
             }
-        );
-
-        addCartItem(
-            {
-                name: "Apples",
-                info: "Sack of Apples",
-                amount: "12",
-                cost: "3",
-                cartId: 2,
-                brand: "Grape Co."
-            }
-        );
-
-        addCartItem(
-            {
-                name: "Grapes",
-                info: "Bag of grapes",
-                amount: "42",
-                cost: "2.75",
-                cartId: 3,
-                brand: "Grape Co."
-            }
-        );
+        }); //ajax
 
         function addCartItem(element) {
             img = element.imgId ? "https://drive.google.com/uc?export=download&id=" + element.imgId : "/images/Empty.png";
+            cost = round((element.cost * parseFloat(element.amount)), 2);
             $("#cartItemHolder").append(
                 `
-                        <tr id="cartItem${element.cartId}">
-                            <td>
-                                <div class="row">
-                                    <div class="col-md-3 text-left">
-                                        <img src="${img}" alt="Picture of ${element.name}" class="img-fluid rounded mb-2 shadow ">
-                                            </div>
-                                        <div class="col-md-9 text-left mt-sm-2">
-                                            <h4><strong>${element.name}</strong></h4>
-                                            <p class="font-weight-light">${element.brand}</p>
+                    <tr id="cartItem${element.cartId}">
+                        <td>
+                            <div class="row">
+                                <div class="col-md-3 text-left">
+                                    <img src="${img}" alt="Picture of ${element.name}" class="img-fluid rounded mb-2 shadow ">
                                         </div>
+                                    <div class="col-md-9 text-left mt-sm-2">
+                                        <h4><strong>${element.name}</strong></h4>
+                                        <p class="font-weight-light">${element.brand}</p>
                                     </div>
-                                    </td>
-                                <td> $<span id="totalCost${element.cartId}">${element.cost * parseFloat(element.amount)}</span></td>
-                                <td>
-                                    <input id="amount${element.cartId}" type="text" class="form-control form-control-lg text-center amount" value="${element.amount}", maxlength=4>
+                                </div>
                                 </td>
-                                <td class="actions" data-th="">
-                                    <div class="text-right">
-                                        <button id="deleteCart${element.cartId}" class="btn btn-white border-secondary bg-white text-danger btn-md mb-2">X</button>
-                                    </div>
-                                </td>
-                        </tr>
-                        `
+                            <td> $<span id="totalCost${element.cartId}">${cost}</span></td>
+                            <td>
+                                <input id="amount${element.cartId}" type="text" class="form-control form-control-lg text-center amount" value="${element.amount}", maxlength=4>
+                            </td>
+                            <td class="actions" data-th="">
+                                <div class="text-right">
+                                    <button id="deleteCart${element.cartId}" class="btn btn-white border-secondary bg-white btn-md mb-2">X</button>
+                                </div>
+                            </td>
+                    </tr>
+                    `
             );
 
+            items[element.cartId] = element;
             $("#cartCount").text(++cartCount);
 
-            subtotal += parseFloat(element.cost) * parseFloat(element.amount);
+            subtotal += round(parseFloat(element.cost) * parseFloat(element.amount), 2);
             $("#cartSubtotal").text(subtotal);
 
+            // update amount on change
             $(`#amount${element.cartId}`).on('keyup', function () {
-                subtotal -= $(`#totalCost${element.cartId}`).text() ? parseFloat($(`#totalCost${element.cartId}`).text()) : 0;
-                $(`#totalCost${element.cartId}`).text((element.cost * (this.value ? parseFloat(this.value) : 0) + ""));
-                subtotal += $(`#totalCost${element.cartId}`).text() ? parseFloat($(`#totalCost${element.cartId}`).text()) : 0;
-                $("#cartSubtotal").text(subtotal);
+                nochanges = false;
+                subtotal -= $(`#totalCost${element.cartId}`).text() ? round(parseFloat($(`#totalCost${element.cartId}`).text()), 2) : 0;
+                $(`#totalCost${element.cartId}`).text((round(element.cost * (this.value ? parseFloat(this.value) : 0), 2) + ""));
+                subtotal += $(`#totalCost${element.cartId}`).text() ? round(parseFloat($(`#totalCost${element.cartId}`).text()), 2) : 0;
+                $("#cartSubtotal").text(round(subtotal, 2));
             });
 
+            // remove an item from the cart and substract its cost
             $(`#deleteCart${element.cartId}`).on('click', function () {
-                subtotal -= $(`#totalCost${element.cartId}`).text() ? parseFloat($(`#totalCost${element.cartId}`).text()) : 0;
+                nochanges = false;
+                subtotal -= $(`#totalCost${element.cartId}`).text() ? round(parseFloat($(`#totalCost${element.cartId}`).text()), 2) : 0;
                 $(`#cartItem${element.cartId}`).remove();
-                $("#cartSubtotal").text(subtotal);
+                removeCartItem(element.cartId);
+                delete items[element.cartId];
+                $("#cartSubtotal").text(round(subtotal, 2));
                 $("#cartCount").text(--cartCount);
             });
 
             $(`#amount${element.cartId}`).on('keypress', validateNumber);
+        }
+
+        // rounds off rounding errors
+        function round(n, d) {
+            return Number(Math.round(n + "e" + d) + "e-" + d);
+
         }
 
         /**
@@ -147,22 +140,64 @@
             return true;
         };
 
+        $("#continueShopping").on('click', function (event) {
+            Object.keys(items).forEach(function (key) {
+                let item = items[key];
+                updateCartItem(item.cartId, $(`#amount${item.cartId}`).val());
+            });
+            nochanges = true;
+        });
+
         // alert the user if any cart item has invalid amounts.
         $("#checkout").on('click', function (e) {
-            let noQuantity = false;
-            let ids = [];
-            $('input[id^=amount]').each(function (i) {
-                noQuantity &= ($(this).val() == "0" || $(this).val() == "")
-                ids.push($(this).attr('id').substring(6));
+            event.preventDefault();
+
+            Object.keys(items).forEach(function (key) {
+                console.log(key);
+                console.log(items[key]);
+            });
+            console.log("clicked");
+        });
+
+        function updateCartItem(cartId, amount) {
+            return $.ajax({
+                url: "/cart/update",
+                type: "PUT",
+                data: {
+                    amount: amount,
+                    cartId: cartId
+                },
+                success: function (result, status) {
+                    return result;
+                },
+            });
+        }
+
+        function removeCartItem(cartId) {
+            return $.ajax({
+                url: "/cart/remove",
+                type: "DELETE",
+                data: {
+                    cartId: cartId
+                },
+                success: function (result, status) {
+                    return result;
+                },
+            });
+        }
+
+        // try to update data before page is left.  Warn them that all data may not be saved.
+        $(window).bind('beforeunload', function () {
+            if (nochanges) {
+                return "";
+            }
+
+            Object.keys(items).forEach(function (key) {
+                let item = items[key];
+                updateCartItem(item.cartId, $(`#amount${item.cartId}`).val());
             });
 
-            //@TODO use product ids to verify that there is enough stock if not prevent checkout.
-
-            if (!noQuantity) {
-                if (!confirm("All items with 0 quantity will automatically be removed upon checkout.  Are you sure you want to continue with some items having zero quantity.")) {
-                    e.preventDefault();
-                }
-            }
+            return "Are you sure you want to leave? Data may be lost!";
         });
     </script>
 </div>

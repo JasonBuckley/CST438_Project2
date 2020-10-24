@@ -13,19 +13,15 @@ Jason Buckley,
 
 ## User Stories
 
-The following functionality is completed:
-
-- [x] User can ...
-- [x] User can ...
-- [ ] User can ...
+Reference project board.
 
 Our app is hosted on [Heroku](https://cst438-g-webstore.herokuapp.com/)
 
-## Notes
-Discard if not filled
-
 ## Libraries used
 
-- Example 1
-- Example 2
+- Express.js
+- Goggle APIs
+- Bootstrap Library
+- JQuery
+- npm mysql
 

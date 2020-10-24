@@ -28,8 +28,6 @@ const pool = mysql.createPool(sqlConfig);
  * @Returns json object containing all products for page.
  */
 router.get('/', async function (req, res, next) {
-    let where = "";
-
     if (req.query && req.query.id) {
         next();
         return;
@@ -39,40 +37,9 @@ router.get('/', async function (req, res, next) {
         return res.json({ success: false }).status(400);
     }
 
-    if (req.query && Object.keys(req.query).length > 0) {
-        where = "WHERE ";
-
-        let isFirstCondition = false;
-
-        if (req.query.search) {
-            where += `name LIKE ${pool.escape('%' + req.query.search + '%')}`;
-            isFirstCondition = true;
-        }
-
-        if (req.query.min) {
-            if (isFirstCondition) {
-                where += " AND cost >= " + req.query.min;
-            } else {
-                where += "cost >= " + req.query.min;
-                isFirstCondition = true;
-            }
-        }
-
-        if (req.query.max) {
-            if (isFirstCondition) {
-                where += " AND cost <= " + req.query.max;
-            } else {
-                where += "cost <= " + req.query.max;
-                isFirstCondition = true;
-            }
-        }
-    }
-
     var products = await new Promise(function (resolve, reject) {
-        where = where === "WHERE " ? "" : where;
         page = req.query.page ? req.query.page : 0;
-        const query = `SELECT * FROM Product ${where} Limit 5 OFFSET ${page * 5};`
-
+        const query = `SELECT * FROM Product Limit 5 OFFSET ${page * 5};`
         pool.query(query, function (error, results) {
             if (error) {
                 req.err = error;
@@ -93,10 +60,10 @@ router.get('/', async function (req, res, next) {
  * @Parameter req.query.id productId
  * @Return returns a product and switches to a page with product info.
  */
-router.get('/:productId', async function (req, res, next) {
+router.get('/', async function (req, res, next) {
     var product = await new Promise(function (resolve, reject) {
         const query = 'SELECT * FROM Product WHERE productId = ?';
-        const values = [req.params.productId];
+        const values = [req.query.id];
 
         pool.query(query, values, function (error, results) {
             if (error) {
@@ -108,27 +75,17 @@ router.get('/:productId', async function (req, res, next) {
         });
     });
 
-    // product = Array.isArray(product) && product.length ? JSON.stringify(product[0]) : "'NONE'";
-    product = Array.isArray(product) && product.length ? product[0] : "'NONE'";
-
-    if (req.session.user) {
-      res.render("product", {
-        title: "Webstore",
-        username: req.session.username,
-        product: product
-      });
-    } else {
-      res.render("product", { title: "Webstore", product: product });
-    }
+    product = Array.isArray(product) && product.length ? JSON.stringify(product[0]) : "'NONE'";
+    res.render('productPage', { product: product });
 });
 
 /**
  * Adds a product to the database.
  */
 router.post('/add', multer.single('photo'), async function (req, res) {
-    console.log(req.body);
-    console.log(req.file);
     if (req.file && req.session.user && req.session.user.accessLevel === 1) {
+        console.log(req.file);
+
         const insertId = await googleAuth()
             .then((jWTClient) => uploadToDrive(req.file, req.file.originalname, req.file.mimetype, jWTClient))
             .then((imgId) => new Promise(function (resolve, reject) {
@@ -151,16 +108,14 @@ router.post('/add', multer.single('photo'), async function (req, res) {
                         resolve(results.insertId);
                     }
                 });
-            })).catch((err) => {
-                console.log(err);
-                return -1;
-            });
+            }));
 
         return res.json(insertId);
 
     } else {
         res.redirect("/users");
     }
+    res.send('File uploaded');
 });
 
 /**
@@ -233,8 +188,7 @@ async function uploadToDrive(file, name, mimetype, jWTClient) {
  * @param name, brand, info, imgId, stock, cost
  * @return int representing id where it was entered
  */
-router.put("/update", async function (req, res) {
-    //find id, if there update info, update db
+router.put("/update/:id", async function (req, res) {
     const insertId = await new Promise(function (resolve, reject) {
         const query = 'UPDATE Product SET name = ?, brand = ?, info = ?, stock = ?, cost = ? WHERE productId = ?';
         const values = [
@@ -263,19 +217,16 @@ router.put("/update", async function (req, res) {
 router.get("/delete/:id", async function (req, res) {
     const deletedId = await new Promise(function (resolve, reject) {
         const query = 'DELETE FROM Product WHERE productId = ?';
-        const values = [req.params.id];
+        const values = [req.query.id];
         pool.query(query, values, function (error, results) {
             if (error) {
                 req.err = error;
                 reject(error);
             } else {
-                console.log(results);
-                resolve(results.insertId);
+                resolve(results);
             }
         });
     });
-
-    console.log("deleteId:" + deletedId);
     return res.send(deletedId + "has been Deleted");
 });
 

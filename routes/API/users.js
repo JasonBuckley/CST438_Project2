@@ -21,7 +21,7 @@ router.use(session({
     saveUninitialized: true
 }));
 
-/** 
+/**
  * Default users path. If given an incomplete query or none it redirects to the home page.
  */
 router.get('/', function (req, res, next) {
@@ -40,7 +40,7 @@ router.get('/', function (req, res, next) {
     }
 
     if (req.session && req.session.user) {
-        return res.redirect("/account");
+        return res.redirect("users/account");
     }
 
     return res.redirect("/");
@@ -230,5 +230,32 @@ router.get("/shoppingcart", function (req, res, next) {
 
     return res.redirect("/");
 });
+
+/**
+ * Gets orders given userId, uses multiple tables.
+ * @Parameter req.query.id orderId
+ * @Return returns orders and switches to a page with order info.
+ */
+router.get('/account', async function (req, res, next) {
+    if(!req.session.user){
+        return res.redirect("/");
+    }
+        var customer_order = await new Promise(function (resolve, reject) {
+            const query = 'SELECT p.imgId, p.name, p.brand, p.info, ROUND((p.cost * o.amount) , 2) subtotal, o.amount FROM Product_Order o NATURAL JOIN Product p WHERE userId = ?;';
+            const values = [req.session.user.userId];
+
+            pool.query(query, values, function (error, results) {
+                if (error) {
+                    req.err = error;
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+
+    customer_order = Array.isArray(customer_order) && customer_order.length ? customer_order : "'NONE'";
+    res.render('account', {customer_order: customer_order, users: req.session.user});
+})
 
 module.exports = router;

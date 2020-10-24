@@ -24,10 +24,6 @@ router.get('/', async function (req, res, next) {
         return;
     }
 
-    if (req.query.page < 0) {
-        return res.json({ success: false }).status(400);
-    }
-
     var orders = await new Promise(function (resolve, reject) {
         const query = `SELECT * FROM Product_Order;`
         pool.query(query, function (error, results) {

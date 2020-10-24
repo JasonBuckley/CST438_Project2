@@ -1,5 +1,4 @@
 const session = require("express-session");
-
 const express = require("express");
 const router = express.Router();
 
@@ -17,6 +16,14 @@ router.get("/", function (req, res, next) {
   } else {
     res.render("home", { title: "Webstore" });
   }
+});
+
+router.get("/users/account/logo", function (req, res, next) {
+    if (req.session.user) {
+        res.redirect("/");
+    } else {
+        res.redirect("/");
+    }
 });
 
 module.exports = router;

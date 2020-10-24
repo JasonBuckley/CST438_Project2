@@ -54,9 +54,14 @@ $(document).ready(function () {
     window.location.href = "/";
   });
 
+  $("#logo2").on("click", function () {
+    window.location.href = "/";
+  });
 
   $("#logout-opt").on("click", logout);
-  
+
+  $("#my-account").on("click", account);
+
 });
 
 // Add product to shopping cart
@@ -128,6 +133,22 @@ function logout() {
     },
   });
 }
+
+function account() {
+  $.ajax({
+    type: "GET",
+    url: "/users/account",
+    dataType: "json",
+    success: function (status) {
+      window.location.href = "/";
+    },
+    error: function (xhr, status, error) {
+      err = eval("error: (" + xhr.responseText + ")");
+      console.error(err);
+    },
+  });
+}
+
 
 function viewProduct(productId) {
   window.location.href = `/product/${productId}`;

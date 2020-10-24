@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel='stylesheet' href='/stylesheets/home.css' />
+    <link rel='stylesheet' href='/stylesheets/account.css' />
+</head>
+    <body>
+    <div class="top-nav-bar">
+        <div class="search-box">
+            <a href="/users/account/logo" style="text-decoration:none" class="logo" id="logo"><div class="link"><h1>LOGO</h1></div></a>
+        </div>
+    </div>
+    <div>
+        <h1 style="text-align: center"><strong>My Account</strong></h1>
+        <br>
+            <div class="title-box-account">
+                <h3>Profile Information</h3>
+            </div>
+            <div class="row-account">
+                <div class="column-account" style="box-sizing: border-box;">
+                    <h5>Username:&nbsp;</h5>
+                    <h5>Address:</h5>
+                    <h5>Email:</h5>
+                </div>
+                <div class="column-account" style="box-sizing: border-box;">
+                    <h5>&nbsp;{{{users.username}}}</h5>
+                    <h5>&nbsp;{{{users.address}}}</h5>
+                    <h5>&nbsp;{{{users.email}}}</h5>
+                    <br>
+                </div>
+            </div>
+            <div class="title-box-account">
+                <h3>Orders</h3>
+            </div>
+        <table id="customers">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th><h5>Name</h5></th>
+                    <th><h5>Brand</h5></th>
+                    <th><h5>Info</h5></th>
+                    <th><h5>Quantity</h5></th>
+                    <th><h5>Total</h5></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each customer_order}}
+                    <tr>
+                        <td><img src="https://drive.google.com/uc?export=download&id={{imgId}}" width="100" height="40"></td>
+                        <td>{{name}}</td>
+                        <td>{{brand}}</td>
+                        <td>{{info}}</td>
+                        <td>{{amount}}</td>
+                        <td>${{subtotal}}</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+        <script src="./javascripts/home.js"></script>
+    </body>
+</html>
+
+
+

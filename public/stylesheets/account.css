@@ -1,0 +1,59 @@
+.link {
+    color: black;
+    text-underline: none;
+}
+
+.account-color {
+    color: #2196f3;
+}
+
+.account-box {
+    width: 30%;
+    border: 2px solid black;
+    padding: 50px;
+    margin: 10px;
+}
+
+.row-account {
+    display: inline-flex;
+}
+
+/* Create two equal columns that sits next to each other */
+.column-account {
+    flex: 100%;
+    padding: 10px;
+}
+
+.title-box-account {
+    background: #2196f3;
+    color: #fff;
+    text-align: center;
+    width: fit-content;
+    padding: 5px;
+    height: 50px;
+    margin-bottom: 10px;
+    display: block ;
+}
+
+#customers {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#customers td, #customers th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #2196f3;
+    color: white;
+}

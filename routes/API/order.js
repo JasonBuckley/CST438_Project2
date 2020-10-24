@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const mysql = require('mysql');
+const { route } = require('..');
 
 // gets the config settings for the db
 const sqlConfig = {
@@ -13,6 +14,38 @@ const sqlConfig = {
 
 // creates a pool to handle query requests.
 const pool = mysql.createPool(sqlConfig);
+
+
+router.get("/checkout", async function (req, res) {
+    if (!req.session.user && !req.query.processedOrders) {
+        res.send("Must be Logged In");
+    }
+
+    console.log(req.query.processedOrders);
+   
+    var orders = await new Promise(function (resolve, reject) {
+        var orderIds = req.query.processedOrders.split(",");
+        var tokens = new Array(orderIds.length).fill('?').join(',');
+        const query = `SELECT o.*, p.name, (ROUND(p.cost * o.amount,2)) subtotal FROM Product_Order o 
+                        NATURAL JOIN Product p WHERE orderId IN (${tokens});`
+        const values = orderIds;
+
+        pool.query(query, values, function (error, results) {
+            if (error) {
+                req.err = error;
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    }).catch((err) => {
+        return [];
+    });
+
+    // change to res.render("/pathOfCheckoutPage", {orders: orders}) to send information to a checkout page
+    return res.render("checkout", { orders: orders });
+
+});
 
 /**
  * Gets all the orders if there is no id in query
@@ -66,6 +99,7 @@ router.get('/', async function (req, res, next) {
  * Add order
  */
 router.post("/add", async function (req, res) {
+    let currentstock;
     if (!req.session.user || !req.body.productId || !req.body.amount) { // only users can make orders
         return res.json(-1);
     }
@@ -84,7 +118,13 @@ router.post("/add", async function (req, res) {
                     req.err = error;
                     reject(error);
                 } else {
+                    if (Array.isArray(results) && results.length < 1) {
+                        reject("Invalid Product Id");
+                        return;
+                    }
+
                     if (results[0].stock < req.body.amount) {
+                        currentstock = results[0].stock;
                         reject(req.body.productId + ": not enough stock");
                     }
                     resolve(true);
@@ -126,6 +166,10 @@ router.post("/add", async function (req, res) {
         console.log(err);
         return -1; // bad query return -1 indicating a failure.
     });
+
+    if (currentstock) {
+        return res.json(-1 - currentstock); // doing the opposite minus 1 on the client side will give product stock.
+    }
 
     return res.json(orderId);
 });

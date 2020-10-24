@@ -16,7 +16,9 @@
         </div>
         <div class="menu-bar">
             <ul class="menu">
-                <li class="option"><a href="#" class="tag"><i class="fa fa-shopping-basket"></i>cart</a></li>
+                <li class="option"><a href="/users/shoppingCart" class="tag"><i
+                            class="fa fa-shopping-basket"></i>cart</a>
+                </li>
                 {{#if username}}
                 <li class="option dropdown">
                     <a href="#" class="tag dropdown-toggle" data-toggle="dropdown">
@@ -139,22 +141,22 @@
     <section class="header">
         <div class="side-menu" id="side-menu">
             <ul>
-                <li>
+                <li id="side-menu-explore">
                     Explore<i class="fa fa-angle-right"></i>
                 </li>
-                <li>
-                    $10 - $20<i class="fa fa-angle-right"></i>
+                <li id="side-menu-price-opt-1" min="1" max="20">
+                    $1 - $20<i class="fa fa-angle-right"></i>
                 </li>
-                <li>
+                <li id="side-menu-price-opt-2" min="20" max="40">
                     $20 - $40<i class="fa fa-angle-right"></i>
                 </li>
-                <li>
+                <li id="side-menu-price-opt-3" min="40" max="60">
                     $40 - $60<i class="fa fa-angle-right"></i>
                 </li>
-                <li>
+                <li id="side-menu-price-opt-4" min="60" max="80">
                     $60 - $80<i class="fa fa-angle-right"></i>
                 </li>
-                <li>
+                <li id="side-menu-price-opt-5" min="80" max="100">
                     $80 - $100<i class="fa fa-angle-right"></i>
                 </li>
             </ul>
@@ -184,6 +186,10 @@
                 </ol>
             </div>
         </div>
+
+        <div class="search-res">
+            {{>product_list}}
+        </div>
     </section>
 
     <section class="featured">
@@ -201,7 +207,8 @@
                                 id="featured-img-quick-1">
                                 <i class="fa fa-eye"></i>
                             </button>
-                            <button type="button" class="btn btn-secondary" title="Add to Cart">
+                            <button type="button" class="btn btn-secondary" title="Add to Cart" productId=""
+                                id="featured-img-shop-1">
                                 <i class="fa fa-shopping-cart"></i>
                             </button>
                         </div>
@@ -219,7 +226,8 @@
                                 id="featured-img-quick-2">
                                 <i class="fa fa-eye"></i>
                             </button>
-                            <button type="button" class="btn btn-secondary" title="Add to Cart">
+                            <button type="button" class="btn btn-secondary" title="Add to Cart" productId=""
+                                id="featured-img-shop-2">
                                 <i class="fa fa-shopping-cart"></i>
                             </button>
                         </div>
@@ -237,7 +245,8 @@
                                 id="featured-img-quick-3">
                                 <i class="fa fa-eye"></i>
                             </button>
-                            <button type="button" class="btn btn-secondary" title="Add to Cart">
+                            <button type="button" class="btn btn-secondary" title="Add to Cart" productId=""
+                                id="featured-img-shop-3">
                                 <i class="fa fa-shopping-cart"></i>
                             </button>
                         </div>
@@ -255,7 +264,8 @@
                                 id="featured-img-quick-4">
                                 <i class="fa fa-eye"></i>
                             </button>
-                            <button type="button" class="btn btn-secondary" title="Quick Cart">
+                            <button type="button" class="btn btn-secondary" title="Quick Cart" productId=""
+                                id="featured-img-shop-4">
                                 <i class="fa fa-shopping-cart"></i>
                             </button>
                         </div>

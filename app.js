@@ -13,6 +13,7 @@ var usersRouter = require("./routes/API/users");
 var productRouter = require("./routes/API/product");
 var homeRouter = require("./routes/home");
 var orderRouter = require("./routes/API/order");
+var cartRouter = require("./routes/API/cart");
 var app = express();
 
 // create connection to database
@@ -42,6 +43,8 @@ app.use("/", homeRouter);
 app.use("/users", usersRouter);
 app.use("/product", productRouter);
 app.use("/order", orderRouter);
+app.use("/cart", cartRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

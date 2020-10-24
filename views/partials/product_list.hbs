@@ -1,3 +1,22 @@
+<style>
+    #prevPage,
+    #nextPage {
+        color: #fff;
+        background: #2196f3 !important;
+        border: 1px solid #2196f3 !important;
+        box-shadow: none !important;
+        cursor: pointer;
+    }
+
+    #prevPage:hover,
+    #nextPage:hover {
+        color: #fff;
+        background: #0b7dda !important;
+        border: 1px solid #0b7dda !important;
+        cursor: pointer;
+    }
+</style>
+
 <div class="container-fluid flex-row-reverse">
 
     <div class="row w-100">
@@ -10,22 +29,20 @@
                     <th style="width:15%">Price</th>
                 </tr>
             </thead>
-            <tbody id="productContainer">    
+            <tbody id="productContainer">
             </tbody>
         </table>
     </div>
     <div class="d-flex justify-content-end pl-5">
         <p class="text-center">
             <button id="prevPage">
-                <
+                <i class="fa fa-chevron-left"></i> Prev
             </button>
             <button id="nextPage">
-                >
+                Next <i class="fa fa-chevron-right"></i>
             </button>
         </p>
     </div>
 
     <script src="../javascripts/productList.js"></script>
 </div>
-
-

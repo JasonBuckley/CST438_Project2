@@ -14,7 +14,8 @@
         </div>
         <div class="menu-bar">
             <ul class="menu">
-                <li class="option"><a href="#" class="tag"><i class="fa fa-shopping-basket"></i>cart</a></li>
+                <li class="option"><a href="/users/shoppingCart" class="tag"><i
+                            class="fa fa-shopping-basket"></i>cart</a></li>
                 {{#if username}}
                 <li class="option dropdown">
                     <a href="#" class="tag dropdown-toggle" data-toggle="dropdown">{{ username }} <i
@@ -129,7 +130,11 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="search-res">
+        {{>product_list}}
+    </div>
+
+    <div class="container" id="product">
         <!-- Left Column / Headphones Image -->
         <div class="left-column">
             <img src="https://drive.google.com/uc?export=download&id={{product.imgId}}">
@@ -149,7 +154,8 @@
             <!-- Product Pricing -->
             <div class="product-price">
                 <span>${{ product.cost }}</span>
-                <a href="#" class="cart-bttn"><i class="fa fa-shopping-basket"></i>Add to cart</a>
+                <a href="#" class="cart-bttn" productId="{{ product.productId }}"><i
+                        class="fa fa-shopping-basket"></i>Add to cart</a>
             </div>
         </div>
     </div>

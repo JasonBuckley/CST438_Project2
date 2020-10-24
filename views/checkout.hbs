@@ -1,0 +1,49 @@
+
+
+<body style=" padding: 50px">
+    <div id=" checkout">
+        <h1>Checkout</h1>
+        <p>Thank you for shopping at Webstore</p>
+
+        <style>
+            table, th, td {
+                border: 1px solid black;
+            }
+
+            </style>
+
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="min-width: 10%">ID</th>
+                    <th style="min-width: 30%">Product</th>
+                    <th style="min-width: 30%">Quantity</th>
+                    <th style="min-width: 30%">Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+              
+
+
+                {{#each orders}}
+                <tr>
+                    <td>{{orderId}}</td>
+                    <td>{{name}}</td>
+                    <td>{{amount}}</td>
+                    <td>${{subtotal}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    <br />
+    <br />
+    <br />
+    <a href="/" class="btn btn-info">Back to Landing</a>
+
+</body>
+
+

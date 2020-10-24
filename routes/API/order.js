@@ -26,7 +26,8 @@ router.get("/checkout", async function (req, res) {
     var orders = await new Promise(function (resolve, reject) {
         var orderIds = req.query.processedOrders.split(",");
         var tokens = new Array(orderIds.length).fill('?').join(',');
-        const query = `SELECT * FROM Product_Order WHERE orderId in (${tokens});`
+        const query = `SELECT o.*, p.name, (ROUND(p.cost * o.amount,2)) subtotal FROM Product_Order o 
+                        NATURAL JOIN Product p WHERE orderId IN (${tokens});`
         const values = orderIds;
 
         pool.query(query, values, function (error, results) {
@@ -42,7 +43,8 @@ router.get("/checkout", async function (req, res) {
     });
 
     // change to res.render("/pathOfCheckoutPage", {orders: orders}) to send information to a checkout page
-    return res.send(JSON.stringify(orders));
+    return res.render("checkout", { orders: orders });
+
 });
 
 /**

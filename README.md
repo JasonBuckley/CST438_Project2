@@ -1,4 +1,4 @@
-# CST 438, Software Engineering: Project 3 - *Webstore*
+# CST 438, Software Engineering: Project 2 - *Webstore*
 
 The **Webstore** is a web application and REST API that simulates
 shopping in an online store.
